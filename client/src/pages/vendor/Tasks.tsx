@@ -102,12 +102,12 @@ export default function VendorTasks() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">My Tasks</h2>
+    <div className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">My Tasks</h2>
         <div className="flex items-center space-x-4">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder="All Tasks" />
             </SelectTrigger>
             <SelectContent>
@@ -121,7 +121,7 @@ export default function VendorTasks() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {filteredTasks?.map((task: any) => (
           <Card key={task.id} className={`shadow-sm border ${
             task.status === 'in_progress' ? 'border-l-4 border-l-yellow-400' :
@@ -129,17 +129,17 @@ export default function VendorTasks() {
             task.status === 'missed' ? 'border-l-4 border-l-red-400' :
             'border-gray-100'
           }`} data-testid={`task-card-${task.id}`}>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900" data-testid={`task-title-${task.id}`}>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 pr-2" data-testid={`task-title-${task.id}`}>
                     {task.title}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1" data-testid={`task-description-${task.id}`}>
                     {task.description}
                   </p>
                 </div>
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ml-4 ${
+                <span className={`px-2 py-1 text-xs font-medium rounded-full shrink-0 w-fit ${
                   task.status === 'available' ? 'bg-green-100 text-green-800' :
                   task.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
                   task.status === 'completed' || task.status === 'approved' ? 'bg-blue-100 text-blue-800' :
@@ -184,7 +184,7 @@ export default function VendorTasks() {
                 </div>
               )}
               
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                 {task.status === 'available' && (
                   <>
                     <Button
@@ -199,6 +199,7 @@ export default function VendorTasks() {
                       variant="outline"
                       onClick={() => skipTaskMutation.mutate(task.id)}
                       disabled={!(userLimits as any)?.canSkip}
+                      className="w-full sm:w-auto"
                       data-testid={`button-skip-${task.id}`}
                     >
                       Skip

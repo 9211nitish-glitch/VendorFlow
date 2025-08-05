@@ -145,21 +145,21 @@ export function BulkTaskOperations({
   };
 
   return (
-    <Card className="w-full max-w-4xl">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Bulk Task Operations</span>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
+          <span className="truncate">Bulk Task Operations</span>
+          <Button variant="ghost" size="sm" onClick={onClose} className="shrink-0 ml-2">
             <X className="h-4 w-4" />
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
         {/* Task Selection */}
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
             <Label className="text-base font-medium">Select Tasks</Label>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="select-all"
@@ -171,35 +171,40 @@ export function BulkTaskOperations({
                   Select All ({tasks.length})
                 </Label>
               </div>
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="w-fit">
                 {selectedTasks.length} selected
               </Badge>
             </div>
           </div>
 
-          <div className="max-h-64 overflow-y-auto border rounded-lg">
+          <div className="max-h-64 sm:max-h-80 overflow-y-auto border rounded-lg">
             {tasks.map((task) => (
               <div
                 key={task.id}
-                className={`flex items-center space-x-3 p-3 border-b last:border-b-0 ${
-                  selectedTasks.includes(task.id) ? 'bg-blue-50' : 'hover:bg-gray-50'
+                className={`flex items-start space-x-3 p-3 border-b last:border-b-0 ${
+                  selectedTasks.includes(task.id) ? 'bg-blue-50 dark:bg-blue-900/10' : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
-                <Checkbox
-                  id={`task-${task.id}`}
-                  checked={selectedTasks.includes(task.id)}
-                  onCheckedChange={(checked) => handleTaskSelection(task.id, !!checked)}
-                  data-testid={`checkbox-task-${task.id}`}
-                />
-                <div className="flex-1">
-                  <div className="font-medium">{task.title}</div>
-                  <div className="text-sm text-gray-500">
-                    Status: <Badge variant="outline">{task.status}</Badge>
-                    {task.assignedToName && (
-                      <span className="ml-2">
-                        Assigned to: {task.assignedToName}
-                      </span>
-                    )}
+                <div className="pt-0.5">
+                  <Checkbox
+                    id={`task-${task.id}`}
+                    checked={selectedTasks.includes(task.id)}
+                    onCheckedChange={(checked) => handleTaskSelection(task.id, !!checked)}
+                    data-testid={`checkbox-task-${task.id}`}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-sm sm:text-base truncate pr-2">{task.title}</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span>Status:</span>
+                      <Badge variant="outline" className="text-xs">{task.status}</Badge>
+                      {task.assignedToName && (
+                        <span className="text-xs">
+                          Assigned to: <span className="font-medium">{task.assignedToName}</span>
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -209,10 +214,10 @@ export function BulkTaskOperations({
 
         {/* Action Selection */}
         <div className="space-y-4">
-          <Label className="text-base font-medium">Select Action</Label>
+          <Label className="text-sm sm:text-base font-medium">Select Action</Label>
           
           <Select value={bulkAction} onValueChange={setBulkAction}>
-            <SelectTrigger data-testid="select-bulk-action">
+            <SelectTrigger data-testid="select-bulk-action" className="w-full">
               <SelectValue placeholder="Choose an action" />
             </SelectTrigger>
             <SelectContent>
@@ -251,16 +256,19 @@ export function BulkTaskOperations({
 
           {/* Additional Fields Based on Action */}
           {bulkAction === 'assign' && (
-            <div>
-              <Label htmlFor="vendor-select">Select Vendor</Label>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-select" className="text-sm font-medium">Select Vendor</Label>
               <Select value={selectedVendor} onValueChange={setSelectedVendor}>
-                <SelectTrigger id="vendor-select" data-testid="select-vendor">
+                <SelectTrigger id="vendor-select" data-testid="select-vendor" className="w-full">
                   <SelectValue placeholder="Choose a vendor" />
                 </SelectTrigger>
                 <SelectContent>
                   {vendors.map((vendor) => (
                     <SelectItem key={vendor.id} value={vendor.id.toString()}>
-                      {vendor.name} ({vendor.email})
+                      <div className="flex flex-col">
+                        <span className="font-medium">{vendor.name}</span>
+                        <span className="text-xs text-gray-500">{vendor.email}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -269,10 +277,10 @@ export function BulkTaskOperations({
           )}
 
           {bulkAction === 'status' && (
-            <div>
-              <Label htmlFor="status-select">Select New Status</Label>
+            <div className="space-y-2">
+              <Label htmlFor="status-select" className="text-sm font-medium">Select New Status</Label>
               <Select value={newStatus} onValueChange={setNewStatus}>
-                <SelectTrigger id="status-select" data-testid="select-status">
+                <SelectTrigger id="status-select" data-testid="select-status" className="w-full">
                   <SelectValue placeholder="Choose a status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -288,22 +296,28 @@ export function BulkTaskOperations({
           )}
 
           {bulkAction === 'reject' && (
-            <div>
-              <Label htmlFor="rejection-reason">Rejection Reason (Optional)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="rejection-reason" className="text-sm font-medium">Rejection Reason (Optional)</Label>
               <Textarea
                 id="rejection-reason"
                 placeholder="Enter reason for rejection..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 data-testid="textarea-rejection-reason"
+                className="min-h-[80px] resize-none"
               />
             </div>
           )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <Button variant="outline" onClick={onClose} data-testid="button-cancel">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t">
+          <Button 
+            variant="outline" 
+            onClick={onClose} 
+            data-testid="button-cancel"
+            className="order-2 sm:order-1"
+          >
             Cancel
           </Button>
           
@@ -311,6 +325,7 @@ export function BulkTaskOperations({
             onClick={handleBulkOperation}
             disabled={isActionDisabled() || bulkOperationMutation.isPending}
             data-testid="button-execute-bulk"
+            className="order-1 sm:order-2"
           >
             {bulkOperationMutation.isPending && (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -37,15 +37,15 @@ export default function VendorDashboard() {
     Math.ceil((new Date((userPackage as any).expiresAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
   return (
-    <div className="p-6">
-      <header className="mb-8">
-        <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6">
+      <header className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.name}!</h1>
-            <p className="text-gray-600">Here's what's happening with your tasks today.</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Welcome back, {user?.name}!</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Here's what's happening with your tasks today.</p>
           </div>
-          <div className="flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-lg">
-            <i className="fas fa-coins text-secondary"></i>
+          <div className="flex items-center space-x-3 bg-green-50 px-3 py-2 sm:px-4 rounded-lg w-fit">
+            <i className="fas fa-coins text-secondary text-sm"></i>
             <span className="text-sm font-medium text-secondary" data-testid="total-earnings">
               ₹{referralStats && typeof referralStats === 'object' ? (referralStats as any).totalEarnings || 0 : 0} Earned
             </span>
@@ -54,25 +54,25 @@ export default function VendorDashboard() {
       </header>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <Card className="shadow-sm border border-gray-100">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Available Tasks</p>
-                <p className="text-2xl font-bold text-gray-900" data-testid="stat-available-tasks">
+                <p className="text-xl sm:text-2xl font-bold text-gray-900" data-testid="stat-available-tasks">
                   {availableTasksCount}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-clipboard-list text-primary text-xl"></i>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <i className="fas fa-clipboard-list text-primary text-lg sm:text-xl"></i>
               </div>
             </div>
           </CardContent>
         </Card>
         
         <Card className="shadow-sm border border-gray-100">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Completed Tasks</p>

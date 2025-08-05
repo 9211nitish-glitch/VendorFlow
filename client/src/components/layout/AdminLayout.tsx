@@ -1,7 +1,21 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { 
+  Menu, 
+  X, 
+  Home, 
+  CheckSquare, 
+  Users, 
+  Package, 
+  Gift, 
+  CreditCard, 
+  LogOut,
+  Settings
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -10,102 +24,311 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navigation = [
-    { name: 'Dashboard', href: '/admin/dashboard', icon: 'fa-chart-pie' },
-    { name: 'Task Management', href: '/admin/tasks', icon: 'fa-tasks' },
-    { name: 'User Management', href: '/admin/users', icon: 'fa-users' },
-    { name: 'Package Management', href: '/admin/packages', icon: 'fa-box' },
-    { name: 'Referral System', href: '/admin/referrals', icon: 'fa-network-wired' },
+  const { data: dashboardStats } = useQuery({
+    queryKey: ['/api/admin/stats'],
+    retry: false
+  });
+
+  const navItems = [
+    { 
+      label: 'Dashboard', 
+      href: '/admin', 
+      icon: Home,
+      isActive: location === '/admin' 
+    },
+    { 
+      label: 'Tasks', 
+      href: '/admin/tasks', 
+      icon: CheckSquare,
+      isActive: location === '/admin/tasks' 
+    },
+    { 
+      label: 'Users', 
+      href: '/admin/users', 
+      icon: Users,
+      isActive: location === '/admin/users' 
+    },
+    { 
+      label: 'Packages', 
+      href: '/admin/packages', 
+      icon: Package,
+      isActive: location === '/admin/packages' 
+    },
+    { 
+      label: 'Referrals', 
+      href: '/admin/referrals', 
+      icon: Gift,
+      isActive: location === '/admin/referrals' 
+    },
+    { 
+      label: 'Payments', 
+      href: '/admin/payments', 
+      icon: CreditCard,
+      isActive: location === '/admin/payments' 
+    }
   ];
 
-  const isActive = (href: string) => {
-    return location === href || (href === '/admin/dashboard' && location === '/admin');
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-sm h-screen fixed left-0 top-0">
-          <div className="p-6 border-b border-gray-100">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <i className="fas fa-crown text-white text-lg"></i>
-              </div>
-              <div>
-                <h2 className="font-semibold text-gray-900">Admin Panel</h2>
-                <p className="text-sm text-gray-500" data-testid="admin-name">
-                  {user?.name}
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <nav className="mt-6">
-            <div className="px-4 space-y-2">
-              {navigation.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <button
-                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                      isActive(item.href)
-                        ? 'bg-blue-50 text-primary'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                    data-testid={`nav-${item.name.toLowerCase().replace(' ', '-')}`}
-                  >
-                    <i className={`fas ${item.icon} w-5 h-5 mr-3`}></i>
-                    {item.name}
-                  </button>
-                </Link>
-              ))}
-            </div>
-          </nav>
-          
-          <div className="absolute bottom-0 w-64 p-4 border-t border-gray-100">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Mobile Header */}
+      <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
-              onClick={logout}
-              className="w-full justify-start text-red-600 hover:bg-red-50"
-              data-testid="button-logout"
+              size="sm"
+              onClick={toggleMobileMenu}
+              className="p-2"
+              data-testid="button-mobile-menu"
             >
-              <i className="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-              Logout
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Admin Panel
+            </h1>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={logout}
+              className="p-2"
+              data-testid="button-mobile-logout"
+            >
+              <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* Main Content */}
-        <div className="flex-1 ml-64">
-          {/* Header */}
-          <header className="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {navigation.find(item => isActive(item.href))?.name || 'Admin Dashboard'}
-              </h1>
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <Button variant="ghost" size="sm" className="p-2 text-gray-400 hover:text-gray-600">
-                    <i className="fas fa-bell text-lg"></i>
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                      0
-                    </span>
-                  </Button>
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
+          <div className="flex flex-col flex-grow bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center px-4 py-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
+                  <Settings className="h-5 w-5 text-white" />
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                      {user?.name?.substring(0, 2).toUpperCase()}
-                    </span>
-                  </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    Admin Panel
+                  </h1>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Management Dashboard
+                  </p>
                 </div>
               </div>
             </div>
-          </header>
 
-          {/* Page Content */}
-          <main className="min-h-screen">
-            {children}
+            {/* User Info */}
+            <div className="px-4 py-4 border-b border-gray-100 dark:border-gray-700">
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-medium text-sm">
+                    {user?.name?.charAt(0).toUpperCase() || 'A'}
+                  </span>
+                </div>
+                <div className="ml-3 flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    {user?.name || 'Administrator'}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+              
+              <Badge variant="default" className="mt-3 bg-red-500 hover:bg-red-600">
+                Administrator
+              </Badge>
+
+              {/* Quick Stats */}
+              {dashboardStats?.data && (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-xs text-blue-600 dark:text-blue-400">Users</p>
+                    <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                      {dashboardStats.data.totalUsers}
+                    </p>
+                  </div>
+                  <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-600 dark:text-green-400">Tasks</p>
+                    <p className="text-sm font-semibold text-green-700 dark:text-green-300">
+                      {dashboardStats.data.totalTasks}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 py-4 space-y-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <a
+                      className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                        item.isActive
+                          ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                      }`}
+                      data-testid={`nav-${item.label.toLowerCase()}`}
+                    >
+                      <Icon className={`mr-3 h-5 w-5 ${
+                        item.isActive 
+                          ? 'text-red-500 dark:text-red-300' 
+                          : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
+                      }`} />
+                      {item.label}
+                    </a>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Logout Button */}
+            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                onClick={logout}
+                data-testid="button-logout"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                Sign Out
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            <div 
+              className="fixed inset-0 bg-gray-600 bg-opacity-75"
+              onClick={closeMobileMenu}
+              data-testid="mobile-menu-overlay"
+            />
+            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800">
+              {/* Mobile Sidebar Content */}
+              <div className="flex flex-col flex-grow overflow-y-auto">
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
+                      <Settings className="h-5 w-5 text-white" />
+                    </div>
+                    <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Admin Panel
+                    </h1>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closeMobileMenu}
+                    className="p-2"
+                    data-testid="button-close-mobile-menu"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                {/* User Info */}
+                <div className="px-4 py-4 border-b border-gray-100 dark:border-gray-700">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white font-medium text-sm">
+                        {user?.name?.charAt(0).toUpperCase() || 'A'}
+                      </span>
+                    </div>
+                    <div className="ml-3 flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {user?.name || 'Administrator'}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <Badge variant="default" className="mt-3 bg-red-500 hover:bg-red-600">
+                    Administrator
+                  </Badge>
+
+                  {/* Quick Stats */}
+                  {dashboardStats?.data && (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-xs text-blue-600 dark:text-blue-400">Users</p>
+                        <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                          {dashboardStats.data.totalUsers}
+                        </p>
+                      </div>
+                      <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <p className="text-xs text-green-600 dark:text-green-400">Tasks</p>
+                        <p className="text-sm font-semibold text-green-700 dark:text-green-300">
+                          {dashboardStats.data.totalTasks}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Navigation */}
+                <nav className="flex-1 px-4 py-4 space-y-1">
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link key={item.href} href={item.href}>
+                        <a
+                          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                            item.isActive
+                              ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200'
+                              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                          }`}
+                          onClick={closeMobileMenu}
+                          data-testid={`mobile-nav-${item.label.toLowerCase()}`}
+                        >
+                          <Icon className={`mr-3 h-5 w-5 ${
+                            item.isActive 
+                              ? 'text-red-500 dark:text-red-300' 
+                              : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
+                          }`} />
+                          {item.label}
+                        </a>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 lg:ml-64">
+          <main className="p-4 lg:p-6">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
           </main>
         </div>
       </div>

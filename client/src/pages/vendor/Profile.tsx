@@ -176,39 +176,39 @@ export default function VendorProfile() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-        <p className="text-gray-600 mt-2">Manage your profile information and content creator settings</p>
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Profile</h1>
+        <p className="text-gray-600 mt-2 text-sm sm:text-base">Manage your profile information and content creator settings</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
         {/* Profile Photo Section */}
         <Card>
           <CardHeader>
             <CardTitle>Profile Photo</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center space-x-6">
-              <div className="relative">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="relative shrink-0">
                 {profileData.profilePhoto ? (
                   <img
                     src={profileData.profilePhoto}
                     alt="Profile"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-gray-200"
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gray-200"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <i className="fas fa-user text-gray-400 text-2xl"></i>
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                    <i className="fas fa-user text-gray-400 text-xl sm:text-2xl"></i>
                   </div>
                 )}
                 {isUploading && (
                   <div className="absolute inset-0 rounded-full bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-white"></div>
                   </div>
                 )}
               </div>
-              <div>
+              <div className="text-center sm:text-left flex-1">
                 <input
                   type="file"
                   accept="*/*"
@@ -221,7 +221,7 @@ export default function VendorProfile() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="cursor-pointer"
+                    className="cursor-pointer w-full sm:w-auto"
                     disabled={isUploading}
                     onClick={() => document.getElementById('profile-photo')?.click()}
                     data-testid="button-upload-photo"
@@ -229,7 +229,7 @@ export default function VendorProfile() {
                     {isUploading ? 'Uploading...' : 'Change Photo'}
                   </Button>
                 </label>
-                <p className="text-sm text-gray-500 mt-2">Any file type up to 1GB</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-2">Any file type up to 1GB</p>
               </div>
             </div>
           </CardContent>
@@ -241,7 +241,7 @@ export default function VendorProfile() {
             <CardTitle>Basic Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -333,7 +333,7 @@ export default function VendorProfile() {
             <CardTitle>Social Media Links</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="instagram">Instagram</Label>
                 <Input
@@ -399,11 +399,11 @@ export default function VendorProfile() {
         </Card>
 
         {/* Submit Button */}
-        <div className="flex justify-end space-x-4">
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-4">
           <Button
             type="submit"
             disabled={updateProfileMutation.isPending}
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
             data-testid="button-save-profile"
           >
             {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
