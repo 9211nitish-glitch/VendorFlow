@@ -65,6 +65,7 @@ function AppRouter() {
         <Route path="/forgot-password" component={ForgotPassword} />
         <Route path="/reset-password" component={ResetPassword} />
         <Route path="/auth/callback" component={AuthCallback} />
+        <Route path="/auth/error" component={() => <Login />} />
         <Route path="/" component={Login} />
         <Route component={Login} />
       </Switch>

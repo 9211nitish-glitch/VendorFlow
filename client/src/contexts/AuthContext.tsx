@@ -5,7 +5,8 @@ import { apiRequest } from '@/lib/queryClient';
 interface AuthContextType {
   user: Omit<User, 'password'> | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (user: Omit<User, 'password'>, token: string) => void;
+  loginWithCredentials: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, referralCode?: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -26,8 +27,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (storedToken && storedUser && storedUser !== 'undefined') {
       try {
+        const userData = JSON.parse(storedUser);
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        setUser(userData);
       } catch (error) {
         console.error('Error parsing stored user data:', error);
         localStorage.removeItem('token');
@@ -38,22 +40,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = (user: Omit<User, 'password'>, token: string) => {
+    setUser(user);
+    setToken(token);
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+  };
+
+  const loginWithCredentials = async (email: string, password: string) => {
     try {
-      const response = await apiRequest('POST', '/api/auth/login', { email, password });
-      const result = await response.json();
+      const response = await apiRequest('/api/auth/login', { email, password });
       
-      if (!result.success) {
-        throw new Error(result.message);
+      if (!response.success) {
+        throw new Error(response.message);
       }
       
-      const { user, token } = result.data;
-      
-      setUser(user);
-      setToken(token);
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      const { user, token } = response.data;
+      login(user, token);
     } catch (error) {
       throw error;
     }
@@ -61,25 +64,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (name: string, email: string, password: string, referralCode?: string) => {
     try {
-      const response = await apiRequest('POST', '/api/auth/register', {
+      const response = await apiRequest('/api/auth/register', {
         name,
         email,
         password,
         referralCode
       });
-      const result = await response.json();
       
-      if (!result.success) {
-        throw new Error(result.message);
+      if (!response.success) {
+        throw new Error(response.message);
       }
       
-      const { user, token } = result.data;
+      const { user, token } = response.data;
       
-      setUser(user);
-      setToken(token);
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      login(user, token);
     } catch (error) {
       throw error;
     }
@@ -100,6 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       token,
       login,
+      loginWithCredentials,
       register,
       logout,
       isLoading,

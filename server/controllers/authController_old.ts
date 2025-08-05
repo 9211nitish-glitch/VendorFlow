@@ -1,18 +1,23 @@
 import { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
-import { AuthResponse, ApiResponse } from '../../shared/schema';
-import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from '../../shared/schema';
+import { ReferralModel } from '../models/Referral';
+import { insertUserSchema, registerSchema, loginSchema, ApiResponse, AuthResponse, forgotPasswordSchema, resetPasswordSchema } from '@shared/schema';
+import { validationResult, body } from 'express-validator';
+import { GoogleAuthService } from '../services/googleAuthService';
+import { PasswordResetService } from '../services/passwordResetService';
 
 export class AuthController {
-  // Registration validation middleware
   static validateRegister = [
-    body('name').trim().notEmpty().withMessage('Name is required'),
+    body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-    body('referralCode').optional().trim()
+    body('referralCode').optional()
+  ];
+
+  static validateLogin = [
+    body('email').isEmail().withMessage('Valid email is required'),
+    body('password').notEmpty().withMessage('Password is required')
   ];
 
   static async register(req: Request, res: Response) {
@@ -58,7 +63,7 @@ export class AuthController {
       const token = jwt.sign(
         { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET || 'NitishTrytohard@22000',
-        { expiresIn: '7d' }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
       const response: ApiResponse<AuthResponse> = {
@@ -111,14 +116,14 @@ export class AuthController {
         });
       }
 
-      if (user.status !== 'active') {
-        return res.status(403).json({
+      if (user.status === 'blocked') {
+        return res.status(401).json({
           success: false,
-          message: 'Account is blocked. Please contact support.'
+          message: 'Account is blocked'
         });
       }
 
-      const isValidPassword = await bcrypt.compare(password, user.password);
+      const isValidPassword = await UserModel.validatePassword(user, password);
       if (!isValidPassword) {
         return res.status(401).json({
           success: false,
@@ -129,10 +134,10 @@ export class AuthController {
       const token = jwt.sign(
         { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET || 'NitishTrytohard@22000',
-        { expiresIn: '7d' }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
-      const response: AuthResponse = {
+      const response: ApiResponse<AuthResponse> = {
         success: true,
         message: 'Login successful',
         data: {
@@ -161,24 +166,9 @@ export class AuthController {
     }
   }
 
-  // Login validation middleware
-  static validateLogin = [
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('password').notEmpty().withMessage('Password is required')
-  ];
-
-  static async getProfile(req: Request, res: Response) {
+  static async getProfile(req: any, res: Response) {
     try {
-      const userId = (req as any).user?.id;
-      
-      if (!userId) {
-        return res.status(401).json({
-          success: false,
-          message: 'Unauthorized'
-        });
-      }
-
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(req.user.id);
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -251,7 +241,7 @@ export class AuthController {
       const token = jwt.sign(
         { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET || 'NitishTrytohard@22000',
-        { expiresIn: '7d' }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
       // Redirect to frontend with token
@@ -280,37 +270,21 @@ export class AuthController {
         });
       }
 
+      const { forgotPasswordSchema } = await import('../../shared/schema');
       const { email } = forgotPasswordSchema.parse(req.body);
-      
-      const user = await UserModel.findByEmail(email);
-      if (!user) {
-        // Don't reveal if email exists or not
-        return res.json({
-          success: true,
-          message: 'If the email exists, a reset link has been sent'
-        });
-      }
 
-      // Generate reset token
-      const resetToken = jwt.sign(
-        { userId: user.id, email: user.email },
-        process.env.JWT_SECRET || 'NitishTrytohard@22000',
-        { expiresIn: '1h' }
-      );
-
-      // Store reset token (in a real app, you'd send an email)
-      await UserModel.updateResetToken(user.id, resetToken);
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      await PasswordResetService.generateResetToken(email);
 
       res.json({
         success: true,
-        message: 'Password reset link sent to your email',
-        data: { resetToken } // Remove this in production
+        message: 'If the email exists, a password reset link has been sent'
       });
     } catch (error) {
       console.error('Forgot password error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to process forgot password request'
+        message: 'Failed to process password reset request'
       });
     }
   }
@@ -331,39 +305,21 @@ export class AuthController {
         });
       }
 
+      const { resetPasswordSchema } = await import('../../shared/schema');
       const { token, password } = resetPasswordSchema.parse(req.body);
-      
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'NitishTrytohard@22000') as any;
-        const user = await UserModel.findById(decoded.userId);
-        
-        if (!user || user.resetToken !== token) {
-          return res.status(400).json({
-            success: false,
-            message: 'Invalid or expired reset token'
-          });
-        }
 
-        // Update password and clear reset token
-        const hashedPassword = await bcrypt.hash(password, 12);
-        await UserModel.updatePassword(user.id, hashedPassword);
-        await UserModel.clearResetToken(user.id);
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      await PasswordResetService.resetPassword(token, password);
 
-        res.json({
-          success: true,
-          message: 'Password reset successful'
-        });
-      } catch (jwtError) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid or expired reset token'
-        });
-      }
+      res.json({
+        success: true,
+        message: 'Password reset successful'
+      });
     } catch (error) {
       console.error('Reset password error:', error);
-      res.status(500).json({
+      res.status(400).json({
         success: false,
-        message: 'Failed to reset password'
+        message: error instanceof Error ? error.message : 'Failed to reset password'
       });
     }
   }
@@ -379,27 +335,14 @@ export class AuthController {
         });
       }
 
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'NitishTrytohard@22000') as any;
-        const user = await UserModel.findById(decoded.userId);
-        
-        if (!user || user.resetToken !== token) {
-          return res.status(400).json({
-            success: false,
-            message: 'Invalid or expired reset token'
-          });
-        }
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      const isValid = await PasswordResetService.validateResetToken(token);
 
-        res.json({
-          success: true,
-          message: 'Reset token is valid'
-        });
-      } catch (jwtError) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid or expired reset token'
-        });
-      }
+      res.json({
+        success: true,
+        message: 'Token validation result',
+        data: { isValid }
+      });
     } catch (error) {
       console.error('Validate reset token error:', error);
       res.status(500).json({

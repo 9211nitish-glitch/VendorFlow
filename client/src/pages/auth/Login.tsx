@@ -17,7 +17,7 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
-  const { login } = useAuth();
+  const { loginWithCredentials } = useAuth();
 
   const form = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
@@ -29,10 +29,9 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginRequest) => {
-      return apiRequest('/api/auth/login', data);
+      return loginWithCredentials(data.email, data.password);
     },
     onSuccess: (response: any) => {
-      login(response.data.user, response.data.token);
       toast({
         title: 'Success',
         description: 'Login successful! Welcome back.',
