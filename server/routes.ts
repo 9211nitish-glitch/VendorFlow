@@ -213,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // Verify JWT token
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'NitishTrytohard@22000') as any;
       
       // Add user to notification service
       NotificationService.addConnection(decoded.id, decoded.role, ws);

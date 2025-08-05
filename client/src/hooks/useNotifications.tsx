@@ -71,6 +71,12 @@ export function useNotifications() {
           console.log('WebSocket connection closed:', event.code, event.reason);
           setIsConnected(false);
           
+          // If authentication failed, don't keep retrying
+          if (event.code === 1008) {
+            console.log('WebSocket authentication failed, stopping reconnection attempts');
+            return;
+          }
+          
           // Reconnect after 3 seconds if not manually closed
           if (event.code !== 1000) {
             setTimeout(connectWebSocket, 3000);
