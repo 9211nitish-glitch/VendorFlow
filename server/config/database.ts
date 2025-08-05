@@ -164,6 +164,23 @@ async function createTables() {
       (10, 'SuperStar Pro Package', 'online', 365, 365, 365, 34999.00, 4, 0.00, 0.00, 100.00, '0', '0', 'Advance Level', TRUE, FALSE, TRUE, TRUE),
       (11, 'Legendary Creator Kit', 'online', 365, 365, 365, 49999.00, 1, 0.00, 0.00, 500.00, '0', '0', 'Ultimate Star', TRUE, FALSE, TRUE, TRUE)
     `);
+
+    // User Profiles table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS user_profiles (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        userId INT NOT NULL UNIQUE,
+        phone VARCHAR(20),
+        bio TEXT,
+        location VARCHAR(255),
+        contentCreatorType VARCHAR(50),
+        socialLinks JSON,
+        profilePhoto VARCHAR(500),
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
     
     // Re-enable foreign key checks
     await connection.execute(`SET FOREIGN_KEY_CHECKS = 1`);

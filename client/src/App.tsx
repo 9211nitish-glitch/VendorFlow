@@ -25,6 +25,7 @@ import VendorDashboard from "@/pages/vendor/Dashboard";
 import VendorTasks from "@/pages/vendor/Tasks";
 import VendorPackage from "@/pages/vendor/Package";
 import VendorReferrals from "@/pages/vendor/Referrals";
+import VendorProfile from "@/pages/vendor/Profile";
 
 import NotFound from "@/pages/not-found";
 
@@ -127,6 +128,11 @@ function AppRouter() {
           <Route path="/vendor/referrals" component={() => (
             <VendorLayout>
               <VendorReferrals />
+            </VendorLayout>
+          )} />
+          <Route path="/vendor/profile" component={() => (
+            <VendorLayout>
+              <VendorProfile />
             </VendorLayout>
           )} />
         </>

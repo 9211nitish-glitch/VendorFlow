@@ -21,6 +21,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
     { name: 'My Tasks', href: '/vendor/tasks', icon: 'fa-tasks' },
     { name: 'Package Info', href: '/vendor/package', icon: 'fa-box' },
     { name: 'Referrals', href: '/vendor/referrals', icon: 'fa-share-alt' },
+    { name: 'Profile', href: '/vendor/profile', icon: 'fa-user' },
   ];
 
   const isActive = (href: string) => {
@@ -91,7 +92,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                 <div className="flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-lg">
                   <i className="fas fa-coins text-secondary"></i>
                   <span className="text-sm font-medium text-secondary" data-testid="header-earnings">
-                    ₹{referralStats?.totalEarnings || 0} Earned
+                    ₹{referralStats && typeof referralStats === 'object' ? (referralStats as any).totalEarnings || 0 : 0} Earned
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">

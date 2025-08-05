@@ -15,6 +15,7 @@ import { UserController } from './controllers/userController';
 import { PackageController } from './controllers/packageController';
 import { ReferralController } from './controllers/referralController';
 import { PaymentController } from './controllers/paymentController';
+import { UserProfileController } from './controllers/userProfileController';
 
 // Middleware
 import { authenticateToken, requireAdmin, requireVendor } from './middleware/auth';
@@ -81,6 +82,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/referrals/mine', authenticateToken, ReferralController.getUserReferrals);
   app.get('/api/referrals/top', authenticateToken, requireAdmin, ReferralController.getTopReferrers);
   app.get('/api/admin/referrals/stats', authenticateToken, requireAdmin, ReferralController.getReferralSystemStats);
+
+  // User Profile routes
+  app.get('/api/user/profile', authenticateToken, UserProfileController.getProfile);
+  app.put('/api/user/profile', authenticateToken, UserProfileController.validateUpdateProfile, UserProfileController.updateProfile);
+  app.post('/api/user/profile/photo', authenticateToken, UserProfileController.uploadProfilePhoto);
 
   // Payment routes
   app.post('/api/payments/create-order', authenticateToken, PaymentController.createOrder);
