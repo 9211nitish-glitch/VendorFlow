@@ -122,7 +122,8 @@ export class TaskController {
       if (!canPerformTask) {
         return res.status(400).json({
           success: false,
-          message: 'Task limit exceeded or package expired'
+          message: 'Task limit exceeded or package expired. Please purchase a new package to continue.',
+          requiresPackage: true
         });
       }
 
@@ -136,6 +137,14 @@ export class TaskController {
 
       // Increment task usage
       await PackageModel.incrementTaskUsage(userId);
+
+      // Send notification
+      await NotificationService.createNotification(
+        userId,
+        'task_started',
+        `You have started working on task: ${taskId}`,
+        `/tasks/${taskId}`
+      );
 
       const response: ApiResponse = {
         success: true,
@@ -192,12 +201,32 @@ export class TaskController {
       const taskId = parseInt(req.params.id);
       const userId = req.user!.id;
 
-      // Check if user can skip
-      const canSkip = await PackageModel.canUserPerformAction(userId, 'skip');
+      // Check package limits for skipping
+      const userPackage = await PackageModel.getUserPackageWithDetails(userId);
+      if (!userPackage) {
+        return res.status(400).json({
+          success: false,
+          message: 'No active package found. Please purchase a package to continue.',
+          requiresPackage: true
+        });
+      }
+
+      // Check if user can skip (has skip limit or can use task limit)
+      let canSkip = false;
+      let useTaskLimit = false;
+
+      if (userPackage.skipsUsed < userPackage.packageDetails.skipLimit) {
+        canSkip = true;
+      } else if (userPackage.tasksUsed < userPackage.packageDetails.taskLimit) {
+        canSkip = true;
+        useTaskLimit = true;
+      }
+
       if (!canSkip) {
         return res.status(400).json({
           success: false,
-          message: 'Skip limit exceeded'
+          message: 'Skip limit and task limit both exceeded. Please purchase a new package.',
+          requiresPackage: true
         });
       }
 
@@ -210,12 +239,24 @@ export class TaskController {
         });
       }
 
-      // Increment skip usage
-      await PackageModel.incrementSkipUsage(userId);
+      // Increment appropriate counter
+      if (useTaskLimit) {
+        await PackageModel.incrementTaskUsage(userId);
+      } else {
+        await PackageModel.incrementSkipUsage(userId);
+      }
+
+      // Send notification
+      await NotificationService.createNotification(
+        userId,
+        'task_skipped',
+        `You have skipped task: ${taskId}${useTaskLimit ? ' (deducted from task limit)' : ''}`,
+        `/tasks`
+      );
 
       const response: ApiResponse = {
         success: true,
-        message: 'Task skipped successfully'
+        message: `Task skipped successfully${useTaskLimit ? ' (deducted from task limit)' : ''}`
       };
 
       res.json(response);

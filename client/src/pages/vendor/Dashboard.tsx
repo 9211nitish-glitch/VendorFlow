@@ -53,6 +53,22 @@ export default function VendorDashboard() {
         </div>
       </header>
 
+      {/* Package Status Alert */}
+      {!userPackage && (
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-center gap-3">
+            <i className="fas fa-exclamation-triangle text-yellow-600"></i>
+            <div>
+              <h3 className="font-medium text-yellow-800">No Active Package</h3>
+              <p className="text-sm text-yellow-700">You need an active package to accept tasks and earn money.</p>
+              <Link href="/vendor/packages" className="text-sm text-yellow-800 underline hover:no-underline">
+                Browse Packages →
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <Card className="shadow-sm border border-gray-100">
@@ -88,36 +104,58 @@ export default function VendorDashboard() {
         </Card>
         
         <Card className="shadow-sm border border-gray-100">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Skips Remaining</p>
-                <p className="text-2xl font-bold text-gray-900" data-testid="stat-skips-remaining">
-                  {userPackage && packageDetails && typeof userPackage === 'object' ? 
-                    `${packageDetails.skipLimit - ((userPackage as any).skipsUsed || 0)}/${packageDetails.skipLimit}` : 
+                <p className="text-sm font-medium text-gray-600">Tasks Remaining</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900" data-testid="stat-tasks-remaining">
+                  {userPackage && typeof userPackage === 'object' ? 
+                    `${(userPackage as any).tasksRemaining || 0}/${packageDetails?.taskLimit || 0}` : 
                     '0/0'
                   }
                 </p>
               </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-forward text-accent text-xl"></i>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <i className="fas fa-tasks text-green-600 text-lg sm:text-xl"></i>
               </div>
             </div>
           </CardContent>
         </Card>
         
         <Card className="shadow-sm border border-gray-100">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Package Expiry</p>
-                <p className="text-2xl font-bold text-gray-900" data-testid="stat-days-left">
-                  {daysLeft}
+                <p className="text-sm font-medium text-gray-600">Skips Remaining</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900" data-testid="stat-skips-remaining">
+                  {userPackage && typeof userPackage === 'object' ? 
+                    `${(userPackage as any).skipsRemaining || 0}/${packageDetails?.skipLimit || 0}` : 
+                    '0/0'
+                  }
+                </p>
+              </div>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <i className="fas fa-forward text-accent text-lg sm:text-xl"></i>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="shadow-sm border border-gray-100">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Days Remaining</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900" data-testid="stat-days-left">
+                  {userPackage && typeof userPackage === 'object' ? 
+                    `${(userPackage as any).daysLeft || 0}` : 
+                    '0'
+                  }
                 </p>
                 <p className="text-xs text-gray-500">days left</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i className="fas fa-calendar text-purple-600 text-xl"></i>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <i className="fas fa-calendar text-purple-600 text-lg sm:text-xl"></i>
               </div>
             </div>
           </CardContent>

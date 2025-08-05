@@ -81,6 +81,64 @@ export class PackageModel {
     return updateResult.affectedRows > 0;
   }
 
+  static async canUserPerformAction(userId: number, actionType: 'task' | 'skip'): Promise<boolean> {
+    const [rows] = await pool.execute(
+      `SELECT up.*, p.taskLimit, p.skipLimit 
+       FROM user_packages up 
+       JOIN packages p ON up.packageId = p.id 
+       WHERE up.userId = ? AND up.isActive = TRUE AND up.expiresAt > NOW() 
+       LIMIT 1`,
+      [userId]
+    );
+    
+    const userPackages = rows as (UserPackage & { taskLimit: number; skipLimit: number })[];
+    if (!userPackages.length) return false;
+    
+    const userPackage = userPackages[0];
+    
+    if (actionType === 'task') {
+      return userPackage.tasksUsed < userPackage.taskLimit;
+    } else if (actionType === 'skip') {
+      // If skip limit exceeded, check if task limit allows
+      if (userPackage.skipsUsed >= userPackage.skipLimit) {
+        return userPackage.tasksUsed < userPackage.taskLimit;
+      }
+      return true;
+    }
+    
+    return false;
+  }
+
+  static async getUserPackageWithDetails(userId: number): Promise<any> {
+    const [rows] = await pool.execute(
+      `SELECT up.*, p.name as packageName, p.taskLimit, p.skipLimit, p.validityDays, p.price,
+              DATEDIFF(up.expiresAt, NOW()) as daysLeft
+       FROM user_packages up 
+       JOIN packages p ON up.packageId = p.id 
+       WHERE up.userId = ? AND up.isActive = TRUE AND up.expiresAt > NOW() 
+       ORDER BY up.createdAt DESC LIMIT 1`,
+      [userId]
+    );
+    
+    const result = rows as any[];
+    if (!result.length) return null;
+    
+    const userPackage = result[0];
+    return {
+      ...userPackage,
+      packageDetails: {
+        name: userPackage.packageName,
+        taskLimit: userPackage.taskLimit,
+        skipLimit: userPackage.skipLimit,
+        validityDays: userPackage.validityDays,
+        price: userPackage.price
+      },
+      tasksRemaining: Math.max(0, userPackage.taskLimit - userPackage.tasksUsed),
+      skipsRemaining: Math.max(0, userPackage.skipLimit - userPackage.skipsUsed),
+      daysLeft: Math.max(0, userPackage.daysLeft)
+    };
+  }
+
   static async canUserPerformAction(userId: number, action: 'task' | 'skip'): Promise<boolean> {
     const userPackage = await this.getUserPackage(userId);
     if (!userPackage) return false;

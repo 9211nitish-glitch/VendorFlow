@@ -7,11 +7,14 @@ import { Loading } from '@/components/ui/loading';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import UploadModal from '@/components/modals/UploadModal';
+import { PackageSelectionModal } from '@/components/PackageSelectionModal';
 
 export default function VendorTasks() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [packageModalOpen, setPackageModalOpen] = useState(false);
+  const [packageModalReason, setPackageModalReason] = useState('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -35,17 +38,24 @@ export default function VendorTasks() {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks/available'] });
       queryClient.invalidateQueries({ queryKey: ['/api/tasks/vendor'] });
       queryClient.invalidateQueries({ queryKey: ['/api/user/limits'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user/package'] });
       toast({
         title: "Success",
         description: "Task started successfully",
       });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to start task",
-        variant: "destructive",
-      });
+      // Check if error requires package selection
+      if (error.message?.includes('requiresPackage') || error.message?.includes('limit exceeded') || error.message?.includes('package expired')) {
+        setPackageModalReason(error.message);
+        setPackageModalOpen(true);
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to start task",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -53,20 +63,27 @@ export default function VendorTasks() {
     mutationFn: async (taskId: number) => {
       return apiRequest('POST', `/api/tasks/${taskId}/skip`);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks/available'] });
       queryClient.invalidateQueries({ queryKey: ['/api/user/limits'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user/package'] });
       toast({
         title: "Success",
-        description: "Task skipped successfully",
+        description: response.message || "Task skipped successfully",
       });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to skip task",
-        variant: "destructive",
-      });
+      // Check if error requires package selection
+      if (error.message?.includes('requiresPackage') || error.message?.includes('limit exceeded') || error.message?.includes('package expired')) {
+        setPackageModalReason(error.message);
+        setPackageModalOpen(true);
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to skip task",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -255,6 +272,13 @@ export default function VendorTasks() {
         isOpen={uploadModalOpen}
         onClose={() => setUploadModalOpen(false)}
         task={selectedTask}
+      />
+
+      {/* Package Selection Modal */}
+      <PackageSelectionModal
+        isOpen={packageModalOpen}
+        onClose={() => setPackageModalOpen(false)}
+        reason={packageModalReason}
       />
     </div>
   );

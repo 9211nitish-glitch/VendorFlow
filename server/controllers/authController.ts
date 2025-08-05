@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
 import { ReferralModel } from '../models/Referral';
 import { insertUserSchema, registerSchema, loginSchema, ApiResponse, AuthResponse, forgotPasswordSchema, resetPasswordSchema } from '@shared/schema';
