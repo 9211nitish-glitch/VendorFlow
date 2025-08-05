@@ -1,0 +1,185 @@
+🧠 Windsurf AI Prompt — Production-Ready Vendor Task Management System
+Build a complete Vendor Task Management Platform using:
+
+Frontend: React + Tailwind CSS
+
+Backend: Node.js + Express
+
+Database: MySQL (mysql2)
+
+Authentication: JWT (NitishTrytohard@22000)
+
+Payment Gateway: Razorpay
+
+Media Upload: Accept videos or media files via Multer
+
+🔐 Authentication & Users
+JWT-based login/signup
+
+Roles: admin, vendor
+
+First registered user (ID = 1) becomes admin
+
+Each user receives a unique referral code via nanoid(8)
+
+Store referrer via referrer_id
+
+Admin can block/unblock users
+
+🎯 Task Management
+Admin Features:
+Create tasks with:
+
+Media
+
+Title
+
+Description
+
+Timer (duration in minutes/hours)
+
+Assign tasks to vendors
+
+Modify or delete tasks
+
+View task status for all users:
+
+missed
+
+pending
+
+completed
+
+Accept or reject task submissions
+
+Vendor Features:
+View assigned tasks
+
+Submit task videos
+
+Cannot reattempt missed tasks
+
+Skip up to 40 tasks
+
+⏳ Timer Logic:
+Admin sets submission deadline per task
+
+If timer expires and vendor hasn’t submitted, task moves to missed_tasks
+
+This transition should run automatically via cron or a background worker
+
+📦 Package System
+Starter Package
+
+150 task uploads
+
+Valid for 365 days
+
+40 skips allowed
+
+Track usage:
+
+Task count used
+
+Validity period
+
+Remaining skips
+
+Restrict functionality when limit is reached or expired
+
+💸 Referral System (5 Levels)
+yaml
+Copy code
+Level 1: 10%
+Level 2: 5%
+Level 3: 4%
+Level 4: 3%
+Level 5: 2%
+Track referral earnings and links
+
+Admin can view full referral tree and earnings per user
+
+💳 Razorpay Integration
+Use the following live Razorpay credentials:
+
+env
+Copy code
+RAZORPAY_KEY_ID=rzp_live_OhqJDvzONAAemV  
+RAZORPAY_KEY_SECRET=Vjxjdug9chXaUYOsJmcMuOxs  
+Allow payment for packages
+
+Map successful payments to user packages
+
+🖥️ Frontend Pages (React + Tailwind CSS)
+🔐 Login / Register
+📋 Vendor Dashboard:
+Task List:
+
+Available
+
+Completed
+
+Missed
+
+Upload video submissions
+
+Skip task button (show remaining count)
+
+Show package stats
+
+Show referral code and earnings
+
+🛠️ Admin Dashboard:
+Task creation and management
+
+Modify timers, track submissions
+
+View vendor profiles
+
+Block/unblock users
+
+View referral tree and earnings
+
+Monitor missed/completed tasks
+
+⚙️ Environment & Server Config (.env)
+env
+Copy code
+DB_HOST=swift.herosite.pro  
+DB_USER=starsflock  
+DB_PASSWORD=Nitish@123  
+DB_NAME=instarsflock  
+DB_PORT=3306  
+
+JWT_SECRET=NitishTrytohard@22000  
+JWT_EXPIRES_IN=7d  
+
+PORT=5000  
+NODE_ENV=development  
+
+RAZORPAY_KEY_ID=rzp_live_OhqJDvzONAAemV  
+RAZORPAY_KEY_SECRET=Vjxjdug9chXaUYOsJmcMuOxs  
+
+UPLOAD_PATH=./uploads/  
+MAX_FILE_SIZE=50000000  
+✅ Required Backend Tech Stack Features:
+Modular file structure:
+
+Routes
+
+Controllers
+
+Models
+
+Use Express middleware for role-based access
+
+Auto task expiry via node-cron
+
+File upload using Multer
+
+Input validations via express-validator
+
+Enable CORS + body-parser
+
+JWT token protection for private APIs
+
