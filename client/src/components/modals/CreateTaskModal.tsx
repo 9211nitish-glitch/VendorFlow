@@ -57,13 +57,32 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
 
     try {
       setIsUploading(true);
-      const response = await apiRequest('POST', '/api/upload', formData);
+      
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      
+      // Use fetch directly for file upload
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Don't set Content-Type header - browser will set it automatically with boundary for FormData
+        },
+        body: formData,
+      });
+
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Upload failed');
+      }
+      
       return data.data.url;
     } catch (error) {
+      console.error('File upload error:', error);
       toast({
         title: "Error",
-        description: "Failed to upload file",
+        description: error instanceof Error ? error.message : "Failed to upload file",
         variant: "destructive",
       });
       return null;

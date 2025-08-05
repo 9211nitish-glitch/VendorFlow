@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import cors from 'cors';
 
 interface MulterRequest extends Request {
-  file?: Express.Multer.File;
+  file?: any;
 }
 import { initializeDatabase } from './config/database';
 import { CronService } from './services/cronService';
