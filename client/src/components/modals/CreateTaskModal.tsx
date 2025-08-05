@@ -19,7 +19,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
     title: '',
     description: '',
     timeLimit: 4,
-    assignedTo: '',
+    assignedTo: 'unassigned',
     mediaFile: null as File | null
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -85,7 +85,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
       title: formData.title,
       description: formData.description,
       timeLimit: formData.timeLimit,
-      assignedTo: formData.assignedTo ? parseInt(formData.assignedTo) : undefined,
+      assignedTo: formData.assignedTo === 'unassigned' ? undefined : parseInt(formData.assignedTo),
       mediaUrl
     };
 
@@ -97,7 +97,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
       title: '',
       description: '',
       timeLimit: 4,
-      assignedTo: '',
+      assignedTo: 'unassigned',
       mediaFile: null
     });
     onClose();
@@ -216,7 +216,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
                   <SelectValue placeholder="Select vendor (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Unassigned</SelectItem>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
                   {vendors?.map((vendor: any) => (
                     <SelectItem key={vendor.id} value={vendor.id.toString()}>
                       {vendor.name}
