@@ -1,0 +1,42 @@
+STARSFLOCK.IN DEPLOYMENT CHECKLIST
+===================================
+
+□ 1. CREATE DATABASE
+   - Name: starsflock_db
+   - User: starsflock_admin  
+   - Password: (your choice)
+
+□ 2. UPLOAD FILES
+   Backend files → /httpdocs/backend/
+   - server.js
+   - index.js
+   - package.json
+   - start.sh
+   
+   Frontend files → /httpdocs/
+   - index.html
+   - assets/ folder
+   - .htaccess
+
+□ 3. CREATE .ENV FILE
+   Location: /httpdocs/backend/.env
+   Content: Database credentials + JWT secret
+
+□ 4. PLESK NODE.JS SETTINGS
+   - Document Root: /httpdocs/backend
+   - Startup File: server.js
+   - Mode: production
+
+□ 5. INSTALL DEPENDENCIES
+   Use Plesk NPM or SSH: npm install --production
+
+□ 6. START APP
+   Click "Restart App" in Plesk Node.js panel
+
+□ 7. TEST WEBSITE
+   Visit http://starsflock.in
+
+□ 8. CREATE ADMIN
+   Register first user (becomes admin)
+
+DONE! Your website is live!
