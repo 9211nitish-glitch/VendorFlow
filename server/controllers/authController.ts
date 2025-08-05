@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
 import { ReferralModel } from '../models/Referral';
-import { insertUserSchema, registerSchema, loginSchema, ApiResponse, AuthResponse } from '@shared/schema';
+import { insertUserSchema, registerSchema, loginSchema, ApiResponse, AuthResponse, forgotPasswordSchema, resetPasswordSchema } from '@shared/schema';
 import { validationResult, body } from 'express-validator';
+import { GoogleAuthService } from '../services/googleAuthService';
+import { PasswordResetService } from '../services/passwordResetService';
 
 export class AuthController {
   static validateRegister = [

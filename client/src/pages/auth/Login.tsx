@@ -29,12 +29,9 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginRequest) => {
-      return apiRequest('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      return apiRequest('/api/auth/login', data);
     },
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       login(response.data.user, response.data.token);
       toast({
         title: 'Success',
@@ -52,9 +49,9 @@ export default function Login() {
 
   const googleAuthMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest('/api/auth/google');
+      return apiRequest('/api/auth/google', {});
     },
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       // Redirect to Google OAuth URL
       window.location.href = response.data.authUrl;
     },
