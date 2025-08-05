@@ -65,12 +65,12 @@ export default function TaskManagement() {
     },
   });
 
-  const filteredTasks = tasks?.filter((task: any) => {
+  const filteredTasks = Array.isArray(tasks) ? tasks.filter((task: any) => {
     const matchesStatus = statusFilter === 'all' || task.status === statusFilter;
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          task.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
-  });
+  }) : [];
 
   if (isLoading) {
     return <Loading className="h-64" text="Loading tasks..." />;
@@ -170,11 +170,11 @@ export default function TaskManagement() {
                       <div className="flex items-center space-x-2">
                         <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
                           <span className="text-xs font-medium text-primary">
-                            {vendors?.find((v: any) => v.id === task.assignedTo)?.name?.substring(0, 2) || 'UN'}
+                            {Array.isArray(vendors) ? vendors.find((v: any) => v.id === task.assignedTo)?.name?.substring(0, 2) || 'UN' : 'UN'}
                           </span>
                         </div>
                         <span className="text-sm text-gray-900">
-                          {vendors?.find((v: any) => v.id === task.assignedTo)?.name || 'Unknown'}
+                          {Array.isArray(vendors) ? vendors.find((v: any) => v.id === task.assignedTo)?.name || 'Unknown' : 'Unknown'}
                         </span>
                       </div>
                     ) : (

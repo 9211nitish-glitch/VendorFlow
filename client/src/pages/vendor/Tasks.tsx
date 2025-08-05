@@ -70,7 +70,7 @@ export default function VendorTasks() {
     },
   });
 
-  const allTasks = [...(vendorTasks || []), ...(availableTasks || [])];
+  const allTasks = [...(Array.isArray(vendorTasks) ? vendorTasks : []), ...(Array.isArray(availableTasks) ? availableTasks : [])];
   const filteredTasks = allTasks.filter((task: any) => {
     if (statusFilter === 'all') return true;
     if (statusFilter === 'available') return task.status === 'available';
@@ -177,7 +177,7 @@ export default function VendorTasks() {
                   <>
                     <Button
                       onClick={() => startTaskMutation.mutate(task.id)}
-                      disabled={!userLimits?.canPerformTask}
+                      disabled={!(userLimits as any)?.canPerformTask}
                       className="flex-1 bg-secondary text-white hover:bg-emerald-600"
                       data-testid={`button-start-${task.id}`}
                     >
@@ -186,7 +186,7 @@ export default function VendorTasks() {
                     <Button
                       variant="outline"
                       onClick={() => skipTaskMutation.mutate(task.id)}
-                      disabled={!userLimits?.canSkip}
+                      disabled={!(userLimits as any)?.canSkip}
                       data-testid={`button-skip-${task.id}`}
                     >
                       Skip

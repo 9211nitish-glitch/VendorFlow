@@ -217,7 +217,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="unassigned">Unassigned</SelectItem>
-                  {vendors?.map((vendor: any) => (
+                  {Array.isArray(vendors) && vendors.map((vendor: any) => (
                     <SelectItem key={vendor.id} value={vendor.id.toString()}>
                       {vendor.name}
                     </SelectItem>
