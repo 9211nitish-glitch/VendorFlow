@@ -107,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Wallet routes
   app.get('/api/wallet/balance', authenticateToken, WalletController.getWalletBalance);
   app.get('/api/wallet/transactions', authenticateToken, WalletController.getWalletTransactions);
-  app.post('/api/wallet/withdraw', authenticateToken, WalletController.requestWithdrawal);
+  app.post('/api/wallet/withdraw', authenticateToken, WalletController.validateWithdrawalRequest(), WalletController.requestWithdrawal);
 
   // Payment routes
   app.post('/api/payments/create-order', authenticateToken, PaymentController.createOrder);

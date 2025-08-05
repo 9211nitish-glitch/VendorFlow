@@ -111,7 +111,7 @@ export default function Wallet() {
     withdrawMutation.mutate(amount);
   };
 
-  const balance = balanceData?.balance || walletData?.balance || 0;
+  const balance = Number(balanceData?.balance || walletData?.balance || 0);
   const transactions = walletData?.transactions || [];
 
   // Calculate statistics

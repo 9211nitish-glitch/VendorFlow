@@ -14,7 +14,11 @@ import { loginSchema, type LoginRequest } from '@shared/schema';
 import { apiRequest } from '@/lib/queryClient';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
-export default function Login() {
+interface LoginProps {
+  onSwitchToRegister?: () => void;
+}
+
+export default function Login({ onSwitchToRegister }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
   const { loginWithCredentials } = useAuth();
@@ -199,11 +203,21 @@ export default function Login() {
 
           <div className="text-center text-sm">
             <span className="text-muted-foreground">Don't have an account? </span>
-            <Link href="/register">
-              <a className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+            {onSwitchToRegister ? (
+              <button
+                type="button"
+                onClick={onSwitchToRegister}
+                className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >
                 Sign up
-              </a>
-            </Link>
+              </button>
+            ) : (
+              <Link href="/register">
+                <a className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                  Sign up
+                </a>
+              </Link>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -160,11 +160,6 @@ function AppRouter() {
               <VendorWallet />
             </VendorLayout>
           )} />
-          <Route path="/vendor/wallet" component={() => (
-            <VendorLayout>
-              <VendorWallet />
-            </VendorLayout>
-          )} />
         </>
       )}
       <Route path="*" component={NotFound} />
