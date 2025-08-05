@@ -28,19 +28,11 @@ async function createTables() {
   const connection = await pool.getConnection();
   
   try {
-    // Drop tables in correct order (child tables first)
-    await connection.execute(`SET FOREIGN_KEY_CHECKS = 0`);
-    await connection.execute(`DROP TABLE IF EXISTS payments`);
-    await connection.execute(`DROP TABLE IF EXISTS user_packages`);
-    await connection.execute(`DROP TABLE IF EXISTS referrals`);
-    await connection.execute(`DROP TABLE IF EXISTS tasks`);
-    await connection.execute(`DROP TABLE IF EXISTS packages`);
-    await connection.execute(`DROP TABLE IF EXISTS users`);
-    await connection.execute(`SET FOREIGN_KEY_CHECKS = 1`);
+    // Only create tables if they don't exist (preserve existing data)
 
     // Users table
     await connection.execute(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -57,7 +49,7 @@ async function createTables() {
 
     // Packages table
     await connection.execute(`
-      CREATE TABLE packages (
+      CREATE TABLE IF NOT EXISTS packages (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         type ENUM('starter', 'pro', 'premium') NOT NULL,
