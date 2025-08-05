@@ -49,7 +49,10 @@ Preferred communication style: Simple, everyday language.
 
 ### Payment & Subscription System
 - **Payment Gateway**: Razorpay integration for handling payments
-- **Package System**: Subscription-based access with validity periods
+- **Package System**: Stars Flock-based packages with Onsite and Online categories
+- **Package Categories**: 
+  - Onsite: New Star Bundle (₹4,999), Rising Star Starter (₹9,999), Shining Star Pack (₹19,999), Superstar Elite Plan (₹34,999), Legendary Star Package (₹49,999)
+  - Online: Fresh Face Trial (₹1,100), Fresh Face Star (₹4,999), Next Level Creator (₹9,999), Influence Empire (₹19,999), SuperStar Pro Package (₹34,999), Legendary Creator Kit (₹49,999)
 - **Commission Structure**: Multi-level referral commissions (10%, 5%, 4%, 3%, 2%)
 - **Transaction Tracking**: Complete payment lifecycle management
 

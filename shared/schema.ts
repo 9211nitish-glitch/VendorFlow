@@ -89,19 +89,29 @@ export interface Task {
 
 // Package Types
 export enum PackageType {
-  STARTER = 'starter',
-  PRO = 'pro',
-  PREMIUM = 'premium'
+  ONSITE = 'onsite',
+  ONLINE = 'online'
 }
 
 export interface Package {
   id: number;
   name: string;
-  type: PackageType;
+  type: string;
   taskLimit: number;
   skipLimit: number;
   validityDays: number;
   price: number;
+  dailyTaskLimit: number;
+  soloEarn: number;
+  dualEarn: number;
+  earnTask: number;
+  igLimitMin: string;
+  ytLimitMin: string;
+  kitBox?: string;
+  premiumSubscription: boolean;
+  onsiteVideoVisit: boolean;
+  pentaRefEarning: boolean;
+  remoWork: boolean;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
