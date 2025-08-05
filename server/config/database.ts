@@ -181,6 +181,23 @@ async function createTables() {
         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
+
+    // Notifications table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        userId INT NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+        data JSON,
+        isRead BOOLEAN DEFAULT FALSE,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+        INDEX idx_user_created (userId, createdAt),
+        INDEX idx_user_unread (userId, isRead)
+      )
+    `);
     
     // Re-enable foreign key checks
     await connection.execute(`SET FOREIGN_KEY_CHECKS = 1`);

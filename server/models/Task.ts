@@ -11,6 +11,10 @@ export class TaskModel {
     return tasks[0] || null;
   }
 
+  static async getById(id: number): Promise<Task | null> {
+    return this.findById(id);
+  }
+
   static async create(taskData: InsertTask): Promise<Task> {
     const [result] = await pool.execute(
       `INSERT INTO tasks (title, description, mediaUrl, timeLimit, assignedTo) 
@@ -140,5 +144,66 @@ export class TaskModel {
     );
     const updateResult = result as any;
     return updateResult.affectedRows > 0;
+  }
+
+  static async assignToVendor(taskId: number, vendorId: number): Promise<boolean> {
+    const [result] = await pool.execute(
+      `UPDATE tasks 
+       SET assignedTo = ?, status = ?, updatedAt = CURRENT_TIMESTAMP 
+       WHERE id = ? AND status = ?`,
+      [vendorId, TaskStatus.AVAILABLE, taskId, TaskStatus.AVAILABLE]
+    );
+    
+    const updateResult = result as any;
+    return updateResult.affectedRows > 0;
+  }
+
+  static async getWithFilters(filters: {
+    status?: TaskStatus;
+    assignedTo?: number;
+    dateFrom?: string;
+    dateTo?: string;
+    search?: string;
+    offset: number;
+    limit: number;
+  }): Promise<Task[]> {
+    let query = `
+      SELECT t.*, u.name as assignedToName, u.email as assignedToEmail
+      FROM tasks t
+      LEFT JOIN users u ON t.assignedTo = u.id
+      WHERE 1=1
+    `;
+    const params: any[] = [];
+
+    if (filters.status) {
+      query += ' AND t.status = ?';
+      params.push(filters.status);
+    }
+
+    if (filters.assignedTo) {
+      query += ' AND t.assignedTo = ?';
+      params.push(filters.assignedTo);
+    }
+
+    if (filters.dateFrom) {
+      query += ' AND DATE(t.createdAt) >= ?';
+      params.push(filters.dateFrom);
+    }
+
+    if (filters.dateTo) {
+      query += ' AND DATE(t.createdAt) <= ?';
+      params.push(filters.dateTo);
+    }
+
+    if (filters.search) {
+      query += ' AND (t.title LIKE ? OR t.description LIKE ?)';
+      params.push(`%${filters.search}%`, `%${filters.search}%`);
+    }
+
+    query += ' ORDER BY t.createdAt DESC LIMIT ? OFFSET ?';
+    params.push(filters.limit, filters.offset);
+
+    const [rows] = await pool.execute(query, params);
+    return rows as Task[];
   }
 }

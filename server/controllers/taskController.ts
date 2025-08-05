@@ -4,6 +4,7 @@ import { PackageModel } from '../models/Package';
 import { insertTaskSchema, TaskStatus, ApiResponse } from '@shared/schema';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { validationResult, body } from 'express-validator';
+import { NotificationService } from '../services/notificationService';
 
 export class TaskController {
   static validateCreateTask = [
@@ -313,6 +314,168 @@ export class TaskController {
       res.status(500).json({
         success: false,
         message: 'Failed to update task'
+      });
+    }
+  }
+
+  // Bulk Operations for Admins
+  static validateBulkOperation = [
+    body('taskIds').isArray({ min: 1 }).withMessage('Task IDs array is required'),
+    body('taskIds.*').isInt().withMessage('Each task ID must be a number'),
+    body('action').isIn(['approve', 'reject', 'delete', 'assign', 'status']).withMessage('Invalid bulk action')
+  ];
+
+  static async bulkOperation(req: AuthenticatedRequest, res: Response) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array()
+        });
+      }
+
+      const { taskIds, action, vendorId, status, rejectionReason } = req.body;
+      let successCount = 0;
+      let failedTasks: number[] = [];
+
+      for (const taskId of taskIds) {
+        try {
+          switch (action) {
+            case 'approve':
+              const approveSuccess = await TaskModel.updateStatus(taskId, TaskStatus.COMPLETED);
+              if (approveSuccess) {
+                // Get task details for notification
+                const task = await TaskModel.findById(taskId);
+                if (task && task.assignedTo) {
+                  await NotificationService.notifyTaskApproved(taskId, task.assignedTo, task.title);
+                }
+                successCount++;
+              } else {
+                failedTasks.push(taskId);
+              }
+              break;
+
+            case 'reject':
+              const rejectSuccess = await TaskModel.updateStatus(taskId, TaskStatus.REJECTED);
+              if (rejectSuccess) {
+                // Get task details for notification
+                const task = await TaskModel.findById(taskId);
+                if (task && task.assignedTo) {
+                  await NotificationService.notifyTaskRejected(taskId, task.assignedTo, task.title, rejectionReason);
+                }
+                successCount++;
+              } else {
+                failedTasks.push(taskId);
+              }
+              break;
+
+            case 'delete':
+              const deleteSuccess = await TaskModel.delete(taskId);
+              if (deleteSuccess) {
+                successCount++;
+              } else {
+                failedTasks.push(taskId);
+              }
+              break;
+
+            case 'assign':
+              if (!vendorId) {
+                failedTasks.push(taskId);
+                continue;
+              }
+              const assignSuccess = await TaskModel.assignToVendor(taskId, vendorId);
+              if (assignSuccess) {
+                // Get task details for notification
+                const task = await TaskModel.findById(taskId);
+                if (task) {
+                  await NotificationService.notifyTaskAssigned(taskId, vendorId, task.title);
+                }
+                successCount++;
+              } else {
+                failedTasks.push(taskId);
+              }
+              break;
+
+            case 'status':
+              if (!status || !Object.values(TaskStatus).includes(status)) {
+                failedTasks.push(taskId);
+                continue;
+              }
+              const statusSuccess = await TaskModel.updateStatus(taskId, status);
+              if (statusSuccess) {
+                successCount++;
+              } else {
+                failedTasks.push(taskId);
+              }
+              break;
+
+            default:
+              failedTasks.push(taskId);
+          }
+        } catch (error) {
+          console.error(`Error processing bulk operation for task ${taskId}:`, error);
+          failedTasks.push(taskId);
+        }
+      }
+
+      const response: ApiResponse = {
+        success: true,
+        message: `Bulk operation completed. ${successCount} tasks processed successfully${failedTasks.length > 0 ? `, ${failedTasks.length} failed` : ''}`,
+        data: {
+          successCount,
+          failedTasks,
+          totalProcessed: taskIds.length
+        }
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Bulk operation error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to perform bulk operation'
+      });
+    }
+  }
+
+  static async getTasksWithFilters(req: AuthenticatedRequest, res: Response) {
+    try {
+      const {
+        status,
+        assignedTo,
+        dateFrom,
+        dateTo,
+        search,
+        page = 1,
+        limit = 50
+      } = req.query;
+
+      const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+      
+      const tasks = await TaskModel.getWithFilters({
+        status: status as TaskStatus,
+        assignedTo: assignedTo ? parseInt(assignedTo as string) : undefined,
+        dateFrom: dateFrom as string,
+        dateTo: dateTo as string,
+        search: search as string,
+        offset,
+        limit: parseInt(limit as string)
+      });
+
+      const response: ApiResponse = {
+        success: true,
+        message: 'Tasks retrieved successfully',
+        data: tasks
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Get filtered tasks error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to retrieve tasks'
       });
     }
   }

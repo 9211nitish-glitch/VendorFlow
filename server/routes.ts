@@ -1,5 +1,6 @@
 import express, { type Express, type Request } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer } from 'ws';
 import cors from 'cors';
 
 interface MulterRequest extends Request {
@@ -16,6 +17,8 @@ import { PackageController } from './controllers/packageController';
 import { ReferralController } from './controllers/referralController';
 import { PaymentController } from './controllers/paymentController';
 import { UserProfileController } from './controllers/userProfileController';
+import { NotificationService } from './services/notificationService';
+import jwt from 'jsonwebtoken';
 
 // Middleware
 import { authenticateToken, requireAdmin, requireVendor } from './middleware/auth';
@@ -48,7 +51,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Task routes
   app.get('/api/tasks', authenticateToken, TaskController.getAllTasks);
+  app.get('/api/tasks/filtered', authenticateToken, requireAdmin, TaskController.getTasksWithFilters);
   app.post('/api/tasks', authenticateToken, requireAdmin, TaskController.validateCreateTask, TaskController.createTask);
+  app.post('/api/tasks/bulk', authenticateToken, requireAdmin, TaskController.validateBulkOperation, TaskController.bulkOperation);
   app.get('/api/tasks/available', authenticateToken, requireVendor, TaskController.getAvailableTasks);
   app.get('/api/tasks/vendor', authenticateToken, requireVendor, TaskController.getVendorTasks);
   app.post('/api/tasks/:id/start', authenticateToken, requireVendor, TaskController.startTask);
@@ -125,9 +130,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Notification routes
+  app.get('/api/notifications', authenticateToken, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const limit = parseInt(req.query.limit as string) || 20;
+      
+      const notifications = await NotificationService.getUserNotifications(userId, limit);
+      
+      res.json({
+        success: true,
+        message: 'Notifications retrieved successfully',
+        data: notifications
+      });
+    } catch (error) {
+      console.error('Error getting notifications:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.put('/api/notifications/:id/read', authenticateToken, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const notificationId = parseInt(req.params.id);
+      
+      await NotificationService.markNotificationAsRead(notificationId, userId);
+      
+      res.json({
+        success: true,
+        message: 'Notification marked as read'
+      });
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.put('/api/notifications/read-all', authenticateToken, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      
+      await NotificationService.markAllNotificationsAsRead(userId);
+      
+      res.json({
+        success: true,
+        message: 'All notifications marked as read'
+      });
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
   // Serve uploaded files
   app.use('/uploads', express.static(process.env.UPLOAD_PATH || './uploads/'));
 
   const httpServer = createServer(app);
+
+  // Setup WebSocket server for real-time notifications
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+
+  wss.on('connection', (ws, req) => {
+    console.log('WebSocket connection attempt');
+    
+    // Extract token from query parameters or headers
+    const url = new URL(req.url!, `http://${req.headers.host}`);
+    const token = url.searchParams.get('token') || req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      ws.close(1008, 'Authentication required');
+      return;
+    }
+
+    // Verify JWT token
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+      
+      // Add user to notification service
+      NotificationService.addConnection(decoded.id, decoded.role, ws);
+      
+      // Send welcome message
+      ws.send(JSON.stringify({
+        type: 'connected',
+        message: 'Connected to notifications'
+      }));
+      
+    } catch (error) {
+      console.error('WebSocket authentication failed:', error);
+      ws.close(1008, 'Invalid token');
+    }
+  });
+
   return httpServer;
 }

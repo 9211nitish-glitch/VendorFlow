@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { NotificationBell } from '@/components/NotificationBell';
 
 interface VendorLayoutProps {
   children: ReactNode;
@@ -95,6 +96,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                     ₹{referralStats && typeof referralStats === 'object' ? (referralStats as any).totalEarnings || 0 : 0} Earned
                   </span>
                 </div>
+                <NotificationBell />
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
