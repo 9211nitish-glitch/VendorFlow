@@ -1,5 +1,5 @@
 import { pool } from '../config/database';
-import { User, UserRole, UserStatus, InsertUser } from '@shared/schema';
+import { User, UserRole, UserStatus, InsertUser, RegisterUser } from '@shared/schema';
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 
@@ -32,6 +32,43 @@ export class UserModel {
   }
 
   static async create(userData: InsertUser): Promise<User> {
+    const hashedPassword = await bcrypt.hash(userData.password, 12);
+    
+    // Check if this is the first user (should be admin)
+    const [countResult] = await pool.execute('SELECT COUNT(*) as count FROM users');
+    const count = (countResult as any)[0].count;
+    const role = count === 0 ? UserRole.ADMIN : userData.role || UserRole.VENDOR;
+
+    const [result] = await pool.execute(
+      `INSERT INTO users (name, email, password, role, status, referralCode, referrerId) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        userData.name,
+        userData.email,
+        hashedPassword,
+        role,
+        userData.status || UserStatus.ACTIVE,
+        userData.referralCode,
+        userData.referrerId || null
+      ]
+    );
+
+    const insertResult = result as any;
+    const newUser = await this.findById(insertResult.insertId);
+    
+    if (!newUser) {
+      throw new Error('Failed to create user');
+    }
+
+    // Create starter package for new vendor
+    if (role === UserRole.VENDOR) {
+      await this.assignStarterPackage(newUser.id);
+    }
+
+    return newUser;
+  }
+
+  static async createFromRegistration(userData: RegisterUser & { referrerId?: number }): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 12);
     const referralCode = nanoid(8);
     

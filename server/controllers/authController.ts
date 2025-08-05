@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
 import { ReferralModel } from '../models/Referral';
-import { insertUserSchema, loginSchema, ApiResponse, AuthResponse } from '@shared/schema';
+import { insertUserSchema, registerSchema, loginSchema, ApiResponse, AuthResponse } from '@shared/schema';
 import { validationResult, body } from 'express-validator';
 
 export class AuthController {
@@ -29,7 +29,7 @@ export class AuthController {
         });
       }
 
-      const userData = insertUserSchema.parse(req.body);
+      const userData = registerSchema.parse(req.body);
       
       // Check if email already exists
       const existingUser = await UserModel.findByEmail(userData.email);
@@ -42,8 +42,8 @@ export class AuthController {
 
       // Validate referral code if provided
       let referrerId: number | undefined;
-      if (req.body.referralCode) {
-        const referrer = await UserModel.findByReferralCode(req.body.referralCode);
+      if (userData.referralCode) {
+        const referrer = await UserModel.findByReferralCode(userData.referralCode);
         if (!referrer) {
           return res.status(400).json({
             success: false,
@@ -53,7 +53,7 @@ export class AuthController {
         referrerId = referrer.id;
       }
 
-      const user = await UserModel.create({
+      const user = await UserModel.createFromRegistration({
         ...userData,
         referrerId
       });
