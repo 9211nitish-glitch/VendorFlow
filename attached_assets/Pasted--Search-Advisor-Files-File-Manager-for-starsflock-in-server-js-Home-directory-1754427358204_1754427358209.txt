@@ -1,0 +1,209 @@
+
+Search...
+
+
+Advisor
+
+Files
+File Manager for starsflock.in
+
+server.js
+
+
+
+Home directory
+httpdocs
+Name	Modified	Size	Permissions	User	Group	
+deployment-package/backend/server.js
+Aug 6, 2025 01:40 AM
+63 B
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/ws/lib/websocket-server.js
+Aug 6, 2025 01:46 AM
+15.9 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/infiniteQueryObserver.js.map
+Aug 6, 2025 01:48 AM
+6.5 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/mutationObserver.js.map
+Aug 6, 2025 01:48 AM
+7.2 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/queryObserver.js
+Aug 6, 2025 01:47 AM
+21.1 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/mutationObserver.js
+Aug 6, 2025 01:47 AM
+4.8 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/infiniteQueryObserver.js
+Aug 6, 2025 01:47 AM
+2.4 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/queriesObserver.js.map
+Aug 6, 2025 01:48 AM
+12.4 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/queriesObserver.js
+Aug 6, 2025 01:47 AM
+8.1 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/legacy/queryObserver.js.map
+Aug 6, 2025 01:48 AM
+34.2 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/infiniteQueryObserver.js.map
+Aug 6, 2025 01:48 AM
+6.5 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/mutationObserver.js.map
+Aug 6, 2025 01:48 AM
+7.0 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/queryObserver.js
+Aug 6, 2025 01:47 AM
+16.2 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/mutationObserver.js
+Aug 6, 2025 01:47 AM
+3.2 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/infiniteQueryObserver.js
+Aug 6, 2025 01:47 AM
+2.3 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/queriesObserver.js.map
+Aug 6, 2025 01:48 AM
+12.3 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/queriesObserver.js
+Aug 6, 2025 01:47 AM
+6.0 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/@tanstack/query-core/build/modern/queryObserver.js.map
+Aug 6, 2025 01:48 AM
+34.0 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/typescript/lib/tsserver.js
+Aug 6, 2025 01:49 AM
+25.9 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/caniuse-lite/data/features/mutationobserver.js
+Aug 6, 2025 01:49 AM
+1.8 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/caniuse-lite/data/features/intersectionobserver.js
+Aug 6, 2025 01:49 AM
+1.8 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/caniuse-lite/data/features/resizeobserver.js
+Aug 6, 2025 01:50 AM
+1.8 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/lucide-react/dist/esm/icons/server.js.map
+Aug 6, 2025 01:52 AM
+3.0 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/lucide-react/dist/esm/icons/server.js
+Aug 6, 2025 01:50 AM
+668 B
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/react-dom/server.js
+Aug 6, 2025 01:48 AM
+58 B
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/mysql2/lib/server.js
+Aug 6, 2025 01:47 AM
+851 B
+rw- r-- r--
+instarsflock
+psacln
+ 
+node_modules/preact/compat/server.js
+Aug 6, 2025 01:47 AM
+1.0 KB
+rw- r-- r--
+instarsflock
+psacln
+ 
+plesk.com
+Suggest an Idea
+Accessibility
+Cookies

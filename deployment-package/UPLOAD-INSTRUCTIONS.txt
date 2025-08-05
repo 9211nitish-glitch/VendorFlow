@@ -1,0 +1,30 @@
+STARSFLOCK.IN DEPLOYMENT - CORRECT FILE PLACEMENT
+
+UPLOAD MAPPING:
+==============
+
+1. BACKEND FILES → Upload to: /var/www/vhosts/starsflock.in/httpdocs/backend/
+   - backend/server.js
+   - backend/index.js  
+   - backend/package.json
+   - backend/uploads/ (empty folder)
+
+2. FRONTEND FILES → Upload to: /var/www/vhosts/starsflock.in/httpdocs/
+   - index.html
+   - assets/ (folder with CSS/JS)
+   - .htaccess
+
+3. CREATE MANUALLY:
+   - Create file: /var/www/vhosts/starsflock.in/httpdocs/backend/.env
+   - Add your database credentials (see instructions)
+
+4. AFTER UPLOAD:
+   - SSH: cd /var/www/vhosts/starsflock.in/httpdocs/backend
+   - Run: npm install --production  
+   - Restart app in Plesk panel
+
+PLESK NODE.JS SETTINGS:
+======================
+Document Root: /httpdocs/backend
+Startup File: server.js
+Mode: production
