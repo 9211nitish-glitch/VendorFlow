@@ -10,6 +10,9 @@ import { UserRole } from "@shared/schema";
 // Auth Pages
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
+import AuthCallback from "@/pages/auth/AuthCallback";
 
 // Admin Pages
 import AdminLayout from "@/components/layout/AdminLayout";
@@ -55,7 +58,17 @@ function AppRouter() {
   }
 
   if (!user) {
-    return <AuthPages />;
+    return (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/forgot-password" component={ForgotPassword} />
+        <Route path="/reset-password" component={ResetPassword} />
+        <Route path="/auth/callback" component={AuthCallback} />
+        <Route path="/" component={Login} />
+        <Route component={Login} />
+      </Switch>
+    );
   }
 
   return (

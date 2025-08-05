@@ -185,6 +185,7 @@ export class AuthController {
           status: user.status,
           referralCode: user.referralCode,
           referrerId: user.referrerId,
+          googleId: user.googleId,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt
         }
@@ -196,6 +197,155 @@ export class AuthController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve profile'
+      });
+    }
+  }
+
+  // Google OAuth Routes
+  static async googleAuth(req: Request, res: Response) {
+    try {
+      const { GoogleAuthService } = await import('../services/googleAuthService');
+      const authUrl = await GoogleAuthService.getAuthUrl();
+      
+      res.json({
+        success: true,
+        message: 'Google auth URL generated',
+        data: { authUrl }
+      });
+    } catch (error) {
+      console.error('Google auth error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to generate Google auth URL'
+      });
+    }
+  }
+
+  static async googleCallback(req: Request, res: Response) {
+    try {
+      const { code } = req.query;
+      
+      if (!code || typeof code !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: 'Authorization code is required'
+        });
+      }
+
+      const { GoogleAuthService } = await import('../services/googleAuthService');
+      const googleData = await GoogleAuthService.verifyGoogleToken(code);
+      const user = await GoogleAuthService.handleGoogleAuth(googleData);
+
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        process.env.JWT_SECRET || 'NitishTrytohard@22000',
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      );
+
+      // Redirect to frontend with token
+      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}/auth/callback?token=${token}`;
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('Google callback error:', error);
+      const errorUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}/auth/error?message=Google authentication failed`;
+      res.redirect(errorUrl);
+    }
+  }
+
+  // Forgot Password Routes
+  static validateForgotPassword = [
+    body('email').isEmail().withMessage('Valid email is required')
+  ];
+
+  static async forgotPassword(req: Request, res: Response) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array()
+        });
+      }
+
+      const { forgotPasswordSchema } = await import('../../shared/schema');
+      const { email } = forgotPasswordSchema.parse(req.body);
+
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      await PasswordResetService.generateResetToken(email);
+
+      res.json({
+        success: true,
+        message: 'If the email exists, a password reset link has been sent'
+      });
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to process password reset request'
+      });
+    }
+  }
+
+  static validateResetPassword = [
+    body('token').notEmpty().withMessage('Reset token is required'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+  ];
+
+  static async resetPassword(req: Request, res: Response) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array()
+        });
+      }
+
+      const { resetPasswordSchema } = await import('../../shared/schema');
+      const { token, password } = resetPasswordSchema.parse(req.body);
+
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      await PasswordResetService.resetPassword(token, password);
+
+      res.json({
+        success: true,
+        message: 'Password reset successful'
+      });
+    } catch (error) {
+      console.error('Reset password error:', error);
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to reset password'
+      });
+    }
+  }
+
+  static async validateResetToken(req: Request, res: Response) {
+    try {
+      const { token } = req.query;
+      
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: 'Reset token is required'
+        });
+      }
+
+      const { PasswordResetService } = await import('../services/passwordResetService');
+      const isValid = await PasswordResetService.validateResetToken(token);
+
+      res.json({
+        success: true,
+        message: 'Token validation result',
+        data: { isValid }
+      });
+    } catch (error) {
+      console.error('Validate reset token error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to validate reset token'
       });
     }
   }

@@ -48,6 +48,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/register', AuthController.validateRegister, AuthController.register);
   app.post('/api/auth/login', AuthController.validateLogin, AuthController.login);
   app.get('/api/auth/profile', authenticateToken, AuthController.getProfile);
+  
+  // Google OAuth routes
+  app.get('/api/auth/google', AuthController.googleAuth);
+  app.get('/api/auth/google/callback', AuthController.googleCallback);
+  
+  // Password reset routes
+  app.post('/api/auth/forgot-password', AuthController.validateForgotPassword, AuthController.forgotPassword);
+  app.post('/api/auth/reset-password', AuthController.validateResetPassword, AuthController.resetPassword);
+  app.get('/api/auth/validate-reset-token', AuthController.validateResetToken);
 
   // Task routes
   app.get('/api/tasks', authenticateToken, TaskController.getAllTasks);
