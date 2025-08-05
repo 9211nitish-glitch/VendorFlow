@@ -4,7 +4,10 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "/usr/bin/node server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.60.5",
