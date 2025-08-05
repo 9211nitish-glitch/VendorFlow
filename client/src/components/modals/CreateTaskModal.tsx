@@ -125,22 +125,11 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type
-      const allowedTypes = ['video/mp4', 'video/avi', 'video/mov', 'video/wmv', 'video/flv', 'video/webm'];
-      if (!allowedTypes.includes(file.type)) {
+      // Validate file size (1GB max to match server)
+      if (file.size > 1000 * 1024 * 1024) {
         toast({
           title: "Error",
-          description: "Please select a valid video file",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      // Validate file size (50MB max)
-      if (file.size > 50 * 1024 * 1024) {
-        toast({
-          title: "Error",
-          description: "File size must be less than 50MB",
+          description: "File size must be less than 1GB",
           variant: "destructive",
         });
         return;
@@ -188,12 +177,12 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Demonstration Media
+              Task File/Media
             </label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
               <input
                 type="file"
-                accept="video/*"
+                accept="*/*"
                 onChange={handleFileChange}
                 className="hidden"
                 id="media-upload"
@@ -202,7 +191,7 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
               <label htmlFor="media-upload" className="cursor-pointer">
                 <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
                 <p className="text-gray-600">
-                  {formData.mediaFile ? formData.mediaFile.name : 'Click to upload demonstration video or drag and drop'}
+                  {formData.mediaFile ? formData.mediaFile.name : 'Click to upload any file (Images, Videos, Documents, Audio, Archives) - up to 1GB'}
                 </p>
                 <p className="text-sm text-gray-500 mt-2">MP4, AVI, MOV up to 50MB</p>
               </label>
