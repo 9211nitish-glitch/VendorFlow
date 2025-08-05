@@ -157,7 +157,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                 <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-medium text-green-700 dark:text-green-400">
-                      {userPackage.data.name}
+                      {(userPackage as any).data.name}
                     </span>
                     <Badge variant="secondary" className="text-xs">
                       Active
@@ -177,10 +177,10 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                 <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-blue-700 dark:text-blue-400">
-                      Referrals: {referralStats.data.totalReferrals}
+                      Referrals: {(referralStats as any).data.totalReferrals}
                     </span>
                     <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
-                      ₹{referralStats.data.totalEarnings}
+                      ₹{(referralStats as any).data.totalEarnings}
                     </span>
                   </div>
                 </div>
@@ -193,8 +193,8 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                 const Icon = item.icon;
                 return (
                   <Link key={item.href} href={item.href}>
-                    <a
-                      className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    <div
+                      className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                         item.isActive
                           ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
@@ -207,7 +207,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                           : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
                       }`} />
                       {item.label}
-                    </a>
+                    </div>
                   </Link>
                 );
               })}
@@ -283,7 +283,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                     <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-green-700 dark:text-green-400">
-                          {userPackage.data.name}
+                          {(userPackage as any).data.name}
                         </span>
                         <Badge variant="secondary" className="text-xs">
                           Active
@@ -303,10 +303,10 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                     <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-blue-700 dark:text-blue-400">
-                          Referrals: {referralStats.data.totalReferrals}
+                          Referrals: {(referralStats as any).data.totalReferrals}
                         </span>
                         <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
-                          ₹{referralStats.data.totalEarnings}
+                          ₹{(referralStats as any).data.totalEarnings}
                         </span>
                       </div>
                     </div>
@@ -319,8 +319,8 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                     const Icon = item.icon;
                     return (
                       <Link key={item.href} href={item.href}>
-                        <a
-                          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                        <div
+                          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                             item.isActive
                               ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                               : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
@@ -334,7 +334,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                               : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
                           }`} />
                           {item.label}
-                        </a>
+                        </div>
                       </Link>
                     );
                   })}
