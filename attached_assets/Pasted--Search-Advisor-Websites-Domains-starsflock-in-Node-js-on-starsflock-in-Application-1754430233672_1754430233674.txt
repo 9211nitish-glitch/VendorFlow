@@ -1,0 +1,91 @@
+
+Search...
+
+
+Advisor
+
+Websites & Domains
+starsflock.in
+Node.js on starsflock.in
+Application will be restarted after the first request.
+Dashboard
+Run Node.js commands
+
+Node 16.20.2
+
+npm
+
+# npm install bcryptjs@^2.4.3 --omit=dev
+Process exited with non-zero exit code '217'
+
+npm ERR! code ENOTEMPTY
+npm ERR! syscall rename
+npm ERR! path /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream
+npm ERR! dest /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO
+npm ERR! errno -39
+npm ERR! ENOTEMPTY: directory not empty, rename '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream' -> '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO'
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /var/www/vhosts/starsflock.in/.npm/_logs/2025-08-05T21_36_26_193Z-debug-0.log
+
+# npm install --omit=dev
+Process exited with non-zero exit code '217'
+
+npm ERR! code ENOTEMPTY
+npm ERR! syscall rename
+npm ERR! path /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream
+npm ERR! dest /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO
+npm ERR! errno -39
+npm ERR! ENOTEMPTY: directory not empty, rename '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream' -> '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO'
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /var/www/vhosts/starsflock.in/.npm/_logs/2025-08-05T21_37_15_985Z-debug-0.log
+
+# npm cache clean --force
+
+# npm chmod +x force-clean-install.sh ./force-clean-install.sh
+Process exited with non-zero exit code '1'
+Unknown command: "chmod"
+
+To see a list of supported npm commands, run:
+  npm help
+
+
+# npm npm install express@^4.21.2 --save sleep 3 npm install mysql2@^3.11.4 --save   sleep 3 npm install bcryptjs@^2.4.3 --save sleep 3 npm install jsonwebtoken@^9.0.2 --save sleep 3 npm install cors@^2.8.5 --save
+Process exited with non-zero exit code '1'
+Unknown command: "npm"
+
+To see a list of supported npm commands, run:
+  npm help
+
+
+# npm install express@^4.21.2 --save sleep 3
+Process exited with non-zero exit code '217'
+
+npm ERR! code ENOTEMPTY
+npm ERR! syscall rename
+npm ERR! path /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream
+npm ERR! dest /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO
+npm ERR! errno -39
+npm ERR! ENOTEMPTY: directory not empty, rename '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream' -> '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO'
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /var/www/vhosts/starsflock.in/.npm/_logs/2025-08-05T21_42_57_422Z-debug-0.log
+
+# npm install express@^4.21.2
+Process exited with non-zero exit code '217'
+
+npm ERR! code ENOTEMPTY
+npm ERR! syscall rename
+npm ERR! path /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream
+npm ERR! dest /var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO
+npm ERR! errno -39
+npm ERR! ENOTEMPTY: directory not empty, rename '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/readable-stream' -> '/var/www/vhosts/starsflock.in/httpdocs/backend/node_modules/.readable-stream-RweBjMEO'
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /var/www/vhosts/starsflock.in/.npm/_logs/2025-08-05T21_43_18_888Z-debug-0.log
+
+plesk.com
+Suggest an Idea
+Accessibility
+Cookies
