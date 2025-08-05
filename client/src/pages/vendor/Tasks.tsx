@@ -70,7 +70,19 @@ export default function VendorTasks() {
     },
   });
 
-  const allTasks = [...(Array.isArray(vendorTasks) ? vendorTasks : []), ...(Array.isArray(availableTasks) ? availableTasks : [])];
+  // Combine tasks and remove duplicates based on task ID
+  const vendorTasksArray = Array.isArray(vendorTasks) ? vendorTasks : [];
+  const availableTasksArray = Array.isArray(availableTasks) ? availableTasks : [];
+  
+  const taskMap = new Map();
+  vendorTasksArray.forEach((task: any) => taskMap.set(task.id, task));
+  availableTasksArray.forEach((task: any) => {
+    if (!taskMap.has(task.id)) {
+      taskMap.set(task.id, task);
+    }
+  });
+  
+  const allTasks = Array.from(taskMap.values());
   const filteredTasks = allTasks.filter((task: any) => {
     if (statusFilter === 'all') return true;
     if (statusFilter === 'available') return task.status === 'available';

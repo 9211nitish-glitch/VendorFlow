@@ -124,58 +124,8 @@ export default function VendorDashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick Actions */}
-        <Card className="shadow-sm border border-gray-100">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div className="space-y-3">
-              <Link href="/vendor/tasks">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-blue-50 hover:bg-blue-100 text-left"
-                  data-testid="button-start-task"
-                >
-                  <div className="flex items-center space-x-3">
-                    <i className="fas fa-play-circle text-primary text-xl"></i>
-                    <span className="font-medium text-gray-900">Start New Task</span>
-                  </div>
-                  <i className="fas fa-arrow-right text-gray-400"></i>
-                </Button>
-              </Link>
-              
-              <Link href="/vendor/tasks">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-green-50 hover:bg-green-100 text-left"
-                  data-testid="button-submit-video"
-                >
-                  <div className="flex items-center space-x-3">
-                    <i className="fas fa-upload text-secondary text-xl"></i>
-                    <span className="font-medium text-gray-900">Submit Video</span>
-                  </div>
-                  <i className="fas fa-arrow-right text-gray-400"></i>
-                </Button>
-              </Link>
-              
-              <Link href="/vendor/referrals">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-yellow-50 hover:bg-yellow-100 text-left"
-                  data-testid="button-share-referral"
-                >
-                  <div className="flex items-center space-x-3">
-                    <i className="fas fa-share text-accent text-xl"></i>
-                    <span className="font-medium text-gray-900">Share Referral Link</span>
-                  </div>
-                  <i className="fas fa-arrow-right text-gray-400"></i>
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 gap-6">
         {/* Recent Tasks */}
         <Card className="shadow-sm border border-gray-100">
           <CardContent className="p-6">
