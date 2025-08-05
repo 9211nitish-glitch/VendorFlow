@@ -24,9 +24,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
     
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    if (storedToken && storedUser && storedUser !== 'undefined') {
+      try {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
     }
     
     setIsLoading(false);
@@ -35,13 +41,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response = await apiRequest('POST', '/api/auth/login', { email, password });
-      const data: AuthResponse = await response.json();
+      const result = await response.json();
       
-      setUser(data.user);
-      setToken(data.token);
+      if (!result.success) {
+        throw new Error(result.message);
+      }
       
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      const { user, token } = result.data;
+      
+      setUser(user);
+      setToken(token);
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     } catch (error) {
       throw error;
     }
@@ -55,13 +67,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         referralCode
       });
-      const data: AuthResponse = await response.json();
+      const result = await response.json();
       
-      setUser(data.user);
-      setToken(data.token);
+      if (!result.success) {
+        throw new Error(result.message);
+      }
       
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      const { user, token } = result.data;
+      
+      setUser(user);
+      setToken(token);
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     } catch (error) {
       throw error;
     }
