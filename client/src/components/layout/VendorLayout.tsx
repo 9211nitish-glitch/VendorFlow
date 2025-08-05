@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from '@/components/NotificationBell';
-import { Menu, X, Home, CheckSquare, Users, UserCheck, Gift, LogOut } from 'lucide-react';
+import { Menu, X, Home, CheckSquare, Users, UserCheck, Gift, LogOut, Wallet } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface VendorLayoutProps {
@@ -44,6 +44,12 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       href: '/vendor/package', 
       icon: Gift,
       isActive: location === '/vendor/package' || location === '/vendor/packages'
+    },
+    { 
+      label: 'Wallet', 
+      href: '/vendor/wallet', 
+      icon: Wallet,
+      isActive: location === '/vendor/wallet' 
     },
     { 
       label: 'Profile', 

@@ -244,4 +244,43 @@ export class UserModel {
       [userId]
     );
   }
+
+  static async updateProfile(userId: number, updateData: {
+    name?: string;
+    bio?: string;
+    phone?: string;
+    profilePhoto?: string;
+    bankAccountName?: string;
+    bankAccountNumber?: string;
+    bankIfscCode?: string;
+    bankName?: string;
+    upiId?: string;
+  }): Promise<void> {
+    const fields = Object.keys(updateData).filter(key => updateData[key as keyof typeof updateData] !== undefined);
+    
+    if (fields.length === 0) return;
+
+    const setClause = fields.map(field => {
+      // Convert camelCase to snake_case for database
+      const dbField = field.replace(/([A-Z])/g, '_$1').toLowerCase();
+      return `${dbField} = ?`;
+    }).join(', ');
+
+    const values = fields.map(field => updateData[field as keyof typeof updateData]);
+    values.push(userId);
+
+    await pool.execute(
+      `UPDATE users SET ${setClause} WHERE id = ?`,
+      values
+    );
+  }
+
+  // Alias methods for backward compatibility
+  static async updateResetToken(userId: number, resetToken: string): Promise<void> {
+    await this.setPasswordResetToken(userId, resetToken, new Date(Date.now() + 60 * 60 * 1000)); // 1 hour expiry
+  }
+
+  static async clearResetToken(userId: number): Promise<void> {
+    await this.clearPasswordResetToken(userId);
+  }
 }

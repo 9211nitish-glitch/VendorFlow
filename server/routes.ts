@@ -17,6 +17,8 @@ import { PackageController } from './controllers/packageController';
 import { ReferralController } from './controllers/referralController';
 import { PaymentController } from './controllers/paymentController';
 import { UserProfileController } from './controllers/userProfileController';
+import { WalletController } from './controllers/walletController';
+import { ProfileController } from './controllers/profileController';
 import { NotificationService } from './services/notificationService';
 import jwt from 'jsonwebtoken';
 
@@ -99,8 +101,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // User Profile routes
   app.get('/api/user/profile', authenticateToken, UserProfileController.getProfile);
-  app.put('/api/user/profile', authenticateToken, UserProfileController.validateUpdateProfile, UserProfileController.updateProfile);
-  app.post('/api/user/profile/photo', authenticateToken, UserProfileController.uploadProfilePhoto);
+  app.put('/api/user/profile', authenticateToken, ProfileController.validateUpdateProfile, ProfileController.updateProfile);
+  app.post('/api/user/profile/photo', authenticateToken, upload.single('photo'), ProfileController.uploadProfilePhoto);
+
+  // Wallet routes
+  app.get('/api/wallet/balance', authenticateToken, WalletController.getWalletBalance);
+  app.get('/api/wallet/transactions', authenticateToken, WalletController.getWalletTransactions);
+  app.post('/api/wallet/withdraw', authenticateToken, WalletController.requestWithdrawal);
 
   // Payment routes
   app.post('/api/payments/create-order', authenticateToken, PaymentController.createOrder);

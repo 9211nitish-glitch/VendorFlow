@@ -61,6 +61,15 @@ export interface User {
   googleId?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  profilePhoto?: string;
+  bio?: string;
+  phone?: string;
+  walletBalance?: number;
+  bankAccountName?: string;
+  bankAccountNumber?: string;
+  bankIfscCode?: string;
+  bankName?: string;
+  upiId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -139,6 +148,7 @@ export interface Package {
   skipLimit: number;
   validityDays: number;
   price: number;
+  paymentPerTask: number;
   dailyTaskLimit: number;
   soloEarn: number;
   dualEarn: number;
@@ -207,6 +217,46 @@ export interface Payment {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Wallet Types
+export enum WalletTransactionType {
+  CREDIT = 'credit',
+  DEBIT = 'debit'
+}
+
+export enum WalletTransactionStatus {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed'
+}
+
+export interface WalletTransaction {
+  id: number;
+  userId: number;
+  type: WalletTransactionType;
+  amount: number;
+  description: string;
+  taskId?: number;
+  referenceId?: string;
+  status: WalletTransactionStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Profile update schema
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  phone: z.string().min(10, "Phone must be at least 10 digits").optional(),
+  profilePhoto: z.string().optional(),
+  bankAccountName: z.string().optional(),
+  bankAccountNumber: z.string().optional(),
+  bankIfscCode: z.string().optional(),
+  bankName: z.string().optional(),
+  upiId: z.string().optional(),
+});
+
+export type UpdateProfileRequest = z.infer<typeof updateProfileSchema>;
 
 // API Response Types
 export interface ApiResponse<T = any> {

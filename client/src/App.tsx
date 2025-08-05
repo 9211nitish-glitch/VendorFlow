@@ -29,6 +29,7 @@ import VendorTasks from "@/pages/vendor/Tasks";
 import VendorPackage from "@/pages/vendor/Package";
 import VendorReferrals from "@/pages/vendor/Referrals";
 import VendorProfile from "@/pages/vendor/Profile";
+import VendorWallet from "@/pages/vendor/Wallet";
 
 import NotFound from "@/pages/not-found";
 
@@ -152,6 +153,16 @@ function AppRouter() {
           <Route path="/vendor/profile" component={() => (
             <VendorLayout>
               <VendorProfile />
+            </VendorLayout>
+          )} />
+          <Route path="/vendor/wallet" component={() => (
+            <VendorLayout>
+              <VendorWallet />
+            </VendorLayout>
+          )} />
+          <Route path="/vendor/wallet" component={() => (
+            <VendorLayout>
+              <VendorWallet />
             </VendorLayout>
           )} />
         </>
