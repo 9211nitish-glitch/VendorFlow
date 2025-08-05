@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Package, InsertPackage, PackageType } from '@shared/schema';
-import { Plus, Edit, Trash2, DollarSign, Clock, Users } from 'lucide-react';
+import { Plus, Edit, Trash2, DollarSign, Clock, Users, Package2, Star, Shield, Zap, Globe, Video, CheckCircle, XCircle } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 
 export default function PackageManagement() {
@@ -154,11 +154,36 @@ export default function PackageManagement() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <div className="h-8 w-64 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-lg animate-pulse"></div>
+            <div className="h-4 w-96 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+          </div>
+          <div className="h-10 w-32 bg-primary/20 rounded-lg animate-pulse"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-4 animate-pulse">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                </div>
+                <div className="flex space-x-1">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {[...Array(4)].map((_, j) => (
+                  <div key={j} className="flex justify-between">
+                    <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-4 w-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -166,20 +191,27 @@ export default function PackageManagement() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Package Management</h1>
-          <p className="text-gray-600 dark:text-gray-400">Create, edit, and manage subscription packages</p>
-        </div>
-        
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button data-testid="button-create-package">
-              <Plus className="h-4 w-4 mr-2" />
-              Create Package
-            </Button>
-          </DialogTrigger>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 -m-6 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              Package Management
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400">Create, edit, and manage your Stars Flock subscription packages</p>
+          </div>
+          
+          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105" 
+                data-testid="button-create-package"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Package
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Package</DialogTitle>
@@ -299,107 +331,213 @@ export default function PackageManagement() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {packages?.map((pkg) => (
-          <Card key={pkg.id} className="hover:shadow-lg transition-shadow" data-testid={`card-package-${pkg.id}`}>
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg" data-testid={`text-package-name-${pkg.id}`}>{pkg.name}</CardTitle>
-                  <CardDescription>
-                    <Badge variant={pkg.type === 'onsite' ? 'default' : 'secondary'}>
-                      {pkg.type.toUpperCase()}
-                    </Badge>
-                  </CardDescription>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {packages?.map((pkg) => (
+            <Card 
+              key={pkg.id} 
+              className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border-0 shadow-lg overflow-hidden" 
+              data-testid={`card-package-${pkg.id}`}
+            >
+              {/* Package Header with Gradient */}
+              <div className={`h-2 ${pkg.type === 'onsite' 
+                ? 'bg-gradient-to-r from-orange-400 to-red-500' 
+                : 'bg-gradient-to-r from-blue-400 to-indigo-500'
+              }`}></div>
+              
+              <CardHeader className="pb-3 relative">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Package2 className={`h-5 w-5 ${pkg.type === 'onsite' ? 'text-orange-500' : 'text-blue-500'}`} />
+                      <CardTitle className="text-xl font-bold" data-testid={`text-package-name-${pkg.id}`}>
+                        {pkg.name}
+                      </CardTitle>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge 
+                        variant={pkg.type === 'onsite' ? 'default' : 'secondary'}
+                        className={pkg.type === 'onsite' 
+                          ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white' 
+                          : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
+                        }
+                      >
+                        {pkg.type === 'onsite' ? 'ONSITE' : 'ONLINE'}
+                      </Badge>
+                      {!pkg.isActive && (
+                        <Badge variant="destructive" className="animate-pulse">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Inactive
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex space-x-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-8 w-8 p-0 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                      onClick={() => openEditDialog(pkg)}
+                      data-testid={`button-edit-${pkg.id}`}
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-8 w-8 p-0 hover:bg-red-50 hover:border-red-300 transition-colors text-red-600"
+                      onClick={() => handleDeletePackage(pkg.id)}
+                      data-testid={`button-delete-${pkg.id}`}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex space-x-1">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    onClick={() => openEditDialog(pkg)}
-                    data-testid={`button-edit-${pkg.id}`}
-                  >
-                    <Edit className="h-3 w-3" />
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="destructive" 
-                    onClick={() => handleDeletePackage(pkg.id)}
-                    data-testid={`button-delete-${pkg.id}`}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <DollarSign className="h-4 w-4 mr-1" />
-                    Price
-                  </span>
-                  <span className="font-semibold" data-testid={`text-price-${pkg.id}`}>₹{pkg.price}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <Users className="h-4 w-4 mr-1" />
-                    Tasks
-                  </span>
-                  <span data-testid={`text-task-limit-${pkg.id}`}>{pkg.taskLimit}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <Clock className="h-4 w-4 mr-1" />
-                    Validity
-                  </span>
-                  <span data-testid={`text-validity-${pkg.id}`}>{pkg.validityDays} days</span>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                {/* Price Section */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-lg p-3 border border-green-200 dark:border-green-700">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center text-sm font-medium text-green-700 dark:text-green-400">
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      Price
+                    </span>
+                    <span className="text-2xl font-bold text-green-600 dark:text-green-400" data-testid={`text-price-${pkg.id}`}>
+                      ₹{Number(pkg.price).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
 
-                {pkg.soloEarn > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Solo Earn</span>
-                    <span>₹{pkg.soloEarn}</span>
+                {/* Key Metrics */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3 text-center border border-blue-200 dark:border-blue-700">
+                    <Users className="h-4 w-4 mx-auto mb-1 text-blue-600 dark:text-blue-400" />
+                    <div className="text-lg font-bold text-blue-600 dark:text-blue-400" data-testid={`text-task-limit-${pkg.id}`}>
+                      {pkg.taskLimit}
+                    </div>
+                    <div className="text-xs text-blue-600 dark:text-blue-400">Tasks</div>
+                  </div>
+                  
+                  <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3 text-center border border-purple-200 dark:border-purple-700">
+                    <Clock className="h-4 w-4 mx-auto mb-1 text-purple-600 dark:text-purple-400" />
+                    <div className="text-lg font-bold text-purple-600 dark:text-purple-400" data-testid={`text-validity-${pkg.id}`}>
+                      {pkg.validityDays}
+                    </div>
+                    <div className="text-xs text-purple-600 dark:text-purple-400">Days</div>
+                  </div>
+                </div>
+
+                {/* Earnings Section */}
+                {(pkg.soloEarn > 0 || pkg.dualEarn > 0 || pkg.earnTask > 0) && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                      <Star className="h-4 w-4 mr-1" />
+                      Earnings
+                    </h4>
+                    <div className="space-y-1">
+                      {pkg.soloEarn > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 dark:text-gray-400">Solo Earn</span>
+                          <span className="font-medium text-yellow-600 dark:text-yellow-400">₹{pkg.soloEarn}</span>
+                        </div>
+                      )}
+                      {pkg.dualEarn > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 dark:text-gray-400">Dual Earn</span>
+                          <span className="font-medium text-yellow-600 dark:text-yellow-400">₹{pkg.dualEarn}</span>
+                        </div>
+                      )}
+                      {pkg.earnTask > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 dark:text-gray-400">Earn Task</span>
+                          <span className="font-medium text-yellow-600 dark:text-yellow-400">₹{pkg.earnTask}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
-                {pkg.dualEarn > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Dual Earn</span>
-                    <span>₹{pkg.dualEarn}</span>
+                {/* Social Media Requirements */}
+                {(pkg.igLimitMin !== '0' || pkg.ytLimitMin !== '0') && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                      <Globe className="h-4 w-4 mr-1" />
+                      Social Requirements
+                    </h4>
+                    <div className="space-y-1">
+                      {pkg.igLimitMin !== '0' && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 dark:text-gray-400">Instagram</span>
+                          <Badge variant="outline" className="text-xs">{pkg.igLimitMin}</Badge>
+                        </div>
+                      )}
+                      {pkg.ytLimitMin !== '0' && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 dark:text-gray-400">YouTube</span>
+                          <Badge variant="outline" className="text-xs">{pkg.ytLimitMin}</Badge>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
-                {pkg.earnTask > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Earn Task</span>
-                    <span>₹{pkg.earnTask}</span>
-                  </div>
-                )}
-
+                {/* Kit Box */}
                 {pkg.kitBox && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Kit Box</span>
-                    <Badge variant="outline">{pkg.kitBox}</Badge>
+                  <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center text-sm font-medium text-amber-700 dark:text-amber-400">
+                        <Shield className="h-4 w-4 mr-1" />
+                        Kit Box
+                      </span>
+                      <Badge className="bg-gradient-to-r from-amber-400 to-orange-400 text-white">
+                        {pkg.kitBox}
+                      </Badge>
+                    </div>
                   </div>
                 )}
 
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {pkg.premiumSubscription && <Badge variant="secondary" className="text-xs">Premium</Badge>}
-                  {pkg.onsiteVideoVisit && <Badge variant="secondary" className="text-xs">Onsite Video</Badge>}
-                  {pkg.pentaRefEarning && <Badge variant="secondary" className="text-xs">Penta Ref</Badge>}
-                  {pkg.remoWork && <Badge variant="secondary" className="text-xs">Remote Work</Badge>}
-                  {!pkg.isActive && <Badge variant="destructive" className="text-xs">Inactive</Badge>}
+                {/* Features */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                    <Zap className="h-4 w-4 mr-1" />
+                    Features
+                  </h4>
+                  <div className="flex flex-wrap gap-1">
+                    {pkg.premiumSubscription && (
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 text-purple-700 dark:text-purple-300">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Premium
+                      </Badge>
+                    )}
+                    {pkg.onsiteVideoVisit && (
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900 dark:to-cyan-900 text-blue-700 dark:text-blue-300">
+                        <Video className="h-3 w-3 mr-1" />
+                        Onsite Video
+                      </Badge>
+                    )}
+                    {pkg.pentaRefEarning && (
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 text-green-700 dark:text-green-300">
+                        <Star className="h-3 w-3 mr-1" />
+                        Penta Ref
+                      </Badge>
+                    )}
+                    {pkg.remoWork && (
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-700 dark:text-indigo-300">
+                        <Globe className="h-3 w-3 mr-1" />
+                        Remote Work
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+              
+              {/* Hover Effect Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </Card>
+          ))}
+        </div>
 
-      {/* Edit Dialog */}
+        {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -520,6 +658,7 @@ export default function PackageManagement() {
           )}
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
