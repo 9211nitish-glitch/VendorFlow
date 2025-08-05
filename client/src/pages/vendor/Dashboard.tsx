@@ -28,12 +28,13 @@ export default function VendorDashboard() {
     return <Loading className="h-64" text="Loading dashboard..." />;
   }
 
-  const completedTasks = vendorTasks?.filter((task: any) => task.status === 'completed' || task.status === 'approved')?.length || 0;
-  const inProgressTasks = vendorTasks?.filter((task: any) => task.status === 'in_progress')?.length || 0;
-  const availableTasksCount = availableTasks?.length || 0;
+  const completedTasks = Array.isArray(vendorTasks) ? vendorTasks.filter((task: any) => task.status === 'completed' || task.status === 'approved').length : 0;
+  const inProgressTasks = Array.isArray(vendorTasks) ? vendorTasks.filter((task: any) => task.status === 'in_progress').length : 0;
+  const availableTasksCount = Array.isArray(availableTasks) ? availableTasks.length : 0;
 
-  const packageDetails = userPackage?.packageDetails;
-  const daysLeft = userPackage ? Math.ceil((new Date(userPackage.expiresAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
+  const packageDetails = userPackage && typeof userPackage === 'object' ? (userPackage as any).packageDetails : null;
+  const daysLeft = userPackage && typeof userPackage === 'object' && (userPackage as any).expiresAt ? 
+    Math.ceil((new Date((userPackage as any).expiresAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
   return (
     <div className="p-6">
@@ -46,7 +47,7 @@ export default function VendorDashboard() {
           <div className="flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-lg">
             <i className="fas fa-coins text-secondary"></i>
             <span className="text-sm font-medium text-secondary" data-testid="total-earnings">
-              ₹{referralStats?.totalEarnings || 0} Earned
+              ₹{referralStats && typeof referralStats === 'object' ? (referralStats as any).totalEarnings || 0 : 0} Earned
             </span>
           </div>
         </div>
@@ -92,8 +93,8 @@ export default function VendorDashboard() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Skips Remaining</p>
                 <p className="text-2xl font-bold text-gray-900" data-testid="stat-skips-remaining">
-                  {userPackage && packageDetails ? 
-                    `${packageDetails.skipLimit - userPackage.skipsUsed}/${packageDetails.skipLimit}` : 
+                  {userPackage && packageDetails && typeof userPackage === 'object' ? 
+                    `${packageDetails.skipLimit - ((userPackage as any).skipsUsed || 0)}/${packageDetails.skipLimit}` : 
                     '0/0'
                   }
                 </p>
@@ -180,7 +181,7 @@ export default function VendorDashboard() {
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Tasks</h3>
             <div className="space-y-4">
-              {vendorTasks && vendorTasks.length > 0 ? (
+              {Array.isArray(vendorTasks) && vendorTasks.length > 0 ? (
                 vendorTasks.slice(0, 3).map((task: any) => (
                   <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-testid={`recent-task-${task.id}`}>
                     <div className="flex items-center space-x-3">
