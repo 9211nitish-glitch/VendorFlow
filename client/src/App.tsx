@@ -17,6 +17,7 @@ import AdminDashboard from "@/pages/admin/Dashboard";
 import TaskManagement from "@/pages/admin/TaskManagement";
 import UserManagement from "@/pages/admin/UserManagement";
 import ReferralSystem from "@/pages/admin/ReferralSystem";
+import PackageManagement from "@/pages/admin/PackageManagement";
 
 // Vendor Pages
 import VendorLayout from "@/components/layout/VendorLayout";
@@ -88,6 +89,11 @@ function AppRouter() {
           <Route path="/admin/referrals" component={() => (
             <AdminLayout>
               <ReferralSystem />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/packages" component={() => (
+            <AdminLayout>
+              <PackageManagement />
             </AdminLayout>
           )} />
         </>

@@ -96,4 +96,79 @@ export class PackageModel {
 
     return false;
   }
+
+  static async create(packageData: Omit<Package, 'id' | 'createdAt' | 'updatedAt'>): Promise<Package> {
+    const [result] = await pool.execute(
+      `INSERT INTO packages (
+        name, type, taskLimit, skipLimit, validityDays, price, 
+        dailyTaskLimit, soloEarn, dualEarn, earnTask, igLimitMin, ytLimitMin,
+        kitBox, premiumSubscription, onsiteVideoVisit, pentaRefEarning, remoWork, isActive
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        packageData.name, packageData.type, packageData.taskLimit, packageData.skipLimit,
+        packageData.validityDays, packageData.price, packageData.dailyTaskLimit,
+        packageData.soloEarn, packageData.dualEarn, packageData.earnTask,
+        packageData.igLimitMin, packageData.ytLimitMin, packageData.kitBox,
+        packageData.premiumSubscription, packageData.onsiteVideoVisit,
+        packageData.pentaRefEarning, packageData.remoWork, packageData.isActive
+      ]
+    );
+
+    const insertResult = result as any;
+    const newPackage = await this.findById(insertResult.insertId);
+    if (!newPackage) {
+      throw new Error('Failed to create package');
+    }
+    return newPackage;
+  }
+
+  static async update(id: number, packageData: Partial<Omit<Package, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Package | null> {
+    const existingPackage = await this.findById(id);
+    if (!existingPackage) {
+      return null;
+    }
+
+    const updateFields = [];
+    const updateValues = [];
+
+    Object.entries(packageData).forEach(([key, value]) => {
+      if (value !== undefined) {
+        updateFields.push(`${key} = ?`);
+        updateValues.push(value);
+      }
+    });
+
+    if (updateFields.length === 0) {
+      return existingPackage;
+    }
+
+    updateValues.push(id);
+
+    await pool.execute(
+      `UPDATE packages SET ${updateFields.join(', ')}, updatedAt = CURRENT_TIMESTAMP WHERE id = ?`,
+      updateValues
+    );
+
+    return this.findById(id);
+  }
+
+  static async delete(id: number): Promise<boolean> {
+    // Check if package is being used by any active user packages
+    const [userPackageRows] = await pool.execute(
+      'SELECT COUNT(*) as count FROM user_packages WHERE packageId = ? AND isActive = TRUE',
+      [id]
+    );
+    const userPackageCount = (userPackageRows as any)[0].count;
+
+    if (userPackageCount > 0) {
+      throw new Error('Cannot delete package that is currently being used by users');
+    }
+
+    const [result] = await pool.execute(
+      'DELETE FROM packages WHERE id = ?',
+      [id]
+    );
+    const deleteResult = result as any;
+    return deleteResult.affectedRows > 0;
+  }
 }

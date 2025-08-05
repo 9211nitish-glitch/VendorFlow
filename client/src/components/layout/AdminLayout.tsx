@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Dashboard', href: '/admin/dashboard', icon: 'fa-chart-pie' },
     { name: 'Task Management', href: '/admin/tasks', icon: 'fa-tasks' },
     { name: 'User Management', href: '/admin/users', icon: 'fa-users' },
+    { name: 'Package Management', href: '/admin/packages', icon: 'fa-box' },
     { name: 'Referral System', href: '/admin/referrals', icon: 'fa-network-wired' },
   ];
 

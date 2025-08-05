@@ -93,6 +93,29 @@ export enum PackageType {
   ONLINE = 'online'
 }
 
+export const insertPackageSchema = z.object({
+  name: z.string().min(1, "Package name is required"),
+  type: z.string().min(1, "Package type is required"),
+  taskLimit: z.number().min(1, "Task limit must be at least 1"),
+  skipLimit: z.number().min(0, "Skip limit cannot be negative"),
+  validityDays: z.number().min(1, "Validity must be at least 1 day"),
+  price: z.number().min(0, "Price cannot be negative"),
+  dailyTaskLimit: z.number().min(0, "Daily task limit cannot be negative").default(0),
+  soloEarn: z.number().min(0, "Solo earn cannot be negative").default(0),
+  dualEarn: z.number().min(0, "Dual earn cannot be negative").default(0),
+  earnTask: z.number().min(0, "Earn task cannot be negative").default(0),
+  igLimitMin: z.string().default('0'),
+  ytLimitMin: z.string().default('0'),
+  kitBox: z.string().optional(),
+  premiumSubscription: z.boolean().default(true),
+  onsiteVideoVisit: z.boolean().default(false),
+  pentaRefEarning: z.boolean().default(true),
+  remoWork: z.boolean().default(false),
+  isActive: z.boolean().default(true),
+});
+
+export type InsertPackage = z.infer<typeof insertPackageSchema>;
+
 export interface Package {
   id: number;
   name: string;

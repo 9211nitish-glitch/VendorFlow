@@ -70,6 +70,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/packages/:id', authenticateToken, PackageController.getPackageById);
   app.get('/api/user/package', authenticateToken, PackageController.getUserPackage);
   app.get('/api/user/limits', authenticateToken, PackageController.checkUserLimits);
+  
+  // Admin package management routes
+  app.post('/api/admin/packages', authenticateToken, requireAdmin, PackageController.createPackage);
+  app.put('/api/admin/packages/:id', authenticateToken, requireAdmin, PackageController.updatePackage);
+  app.delete('/api/admin/packages/:id', authenticateToken, requireAdmin, PackageController.deletePackage);
 
   // Referral routes
   app.get('/api/referrals/stats', authenticateToken, ReferralController.getReferralStats);
