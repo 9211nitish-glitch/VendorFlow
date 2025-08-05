@@ -1,0 +1,48 @@
+The above error occurred in the <Profile> component:
+
+    at Profile (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/pages/vendor/Profile.tsx:43:37)
+    at div
+    at main
+    at div
+    at div
+    at div
+    at VendorLayout (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/components/layout/VendorLayout.tsx:26:40)
+    at component
+    at Route (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=00ebb4aa:323:16)
+    at Switch (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=00ebb4aa:379:17)
+    at AppRouter (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/App.tsx?v=-NeS-jzF9-ntQ1NRwkueH:66:31)
+    at AuthProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/contexts/AuthContext.tsx:22:32)
+    at Provider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=00ebb4aa:38:15)
+    at TooltipProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=00ebb4aa:63:5)
+    at QueryClientProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=00ebb4aa:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+at Profile (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/pages/vendor/Profile.tsx:43:37)
+at div
+at main
+at div
+at div
+at div
+at VendorLayout (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/components/layout/VendorLayout.tsx:26:40)
+at component
+at Route (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=00ebb4aa:323:16)
+at Switch (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=00ebb4aa:379:17)
+at AppRouter (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/App.tsx?v=-NeS-jzF9-ntQ1NRwkueH:66:31)
+at AuthProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/src/contexts/AuthContext.tsx:22:32)
+at Provider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=00ebb4aa:38:15)
+at TooltipProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=00ebb4aa:63:5)
+at QueryClientProvider (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=00ebb4aa:2805:3)
+at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+at t.value (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://920795c3-7226-4381-bbe4-74c2e08a645f-00-2f9hr5hbjy2cy.riker.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Cannot read properties of undefined (reading 'name')
+WebSocket error: 
+Event {isTrusted: true}

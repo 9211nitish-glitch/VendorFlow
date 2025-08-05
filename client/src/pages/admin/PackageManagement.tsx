@@ -26,7 +26,10 @@ export default function PackageManagement() {
   });
 
   const createPackageMutation = useMutation({
-    mutationFn: (data: InsertPackage) => apiRequest('/api/admin/packages', 'POST', data),
+    mutationFn: (data: InsertPackage) => apiRequest('/api/admin/packages', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/packages'] });
       setCreateDialogOpen(false);
@@ -46,7 +49,10 @@ export default function PackageManagement() {
 
   const updatePackageMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<InsertPackage> }) => 
-      apiRequest(`/api/admin/packages/${id}`, 'PUT', data),
+      apiRequest(`/api/admin/packages/${id}`, {
+        method: 'PUT', 
+        body: JSON.stringify(data)
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/packages'] });
       setEditDialogOpen(false);

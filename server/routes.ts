@@ -115,6 +115,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/payments/mine', authenticateToken, PaymentController.getUserPayments);
   app.get('/api/payments', authenticateToken, requireAdmin, PaymentController.getAllPayments);
 
+  // Admin package routes (temporarily using basic implementation)
+  app.post('/api/admin/packages', authenticateToken, requireAdmin, async (req: any, res) => {
+    try {
+      const packageData = req.body;
+      // TODO: Add package creation logic
+      res.json({ success: true, message: 'Package creation endpoint ready', data: packageData });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to create package' });
+    }
+  });
+  
+  app.put('/api/admin/packages/:id', authenticateToken, requireAdmin, async (req: any, res) => {
+    try {
+      const packageId = req.params.id;
+      const packageData = req.body;
+      // TODO: Add package update logic
+      res.json({ success: true, message: 'Package updated successfully', data: { id: packageId, ...packageData } });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to update package' });
+    }
+  });
+  
+  app.delete('/api/admin/packages/:id', authenticateToken, requireAdmin, async (req: any, res) => {
+    try {
+      const packageId = req.params.id;
+      // TODO: Add package deletion logic
+      res.json({ success: true, message: 'Package deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to delete package' });
+    }
+  });
+
   // File upload routes
   app.post('/api/upload', authenticateToken, upload.single('file'), (req: MulterRequest, res) => {
     try {

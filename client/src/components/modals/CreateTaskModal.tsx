@@ -32,7 +32,10 @@ export default function CreateTaskModal({ isOpen, onClose }: CreateTaskModalProp
 
   const createTaskMutation = useMutation({
     mutationFn: async (taskData: any) => {
-      return apiRequest('POST', '/api/tasks', taskData);
+      return apiRequest('/api/tasks', {
+        method: 'POST',
+        body: JSON.stringify(taskData)
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });

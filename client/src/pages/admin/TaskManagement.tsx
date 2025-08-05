@@ -27,7 +27,10 @@ export default function TaskManagement() {
 
   const updateTaskStatusMutation = useMutation({
     mutationFn: async ({ taskId, status }: { taskId: number; status: TaskStatus }) => {
-      return apiRequest('PATCH', `/api/tasks/${taskId}/status`, { status });
+      return apiRequest(`/api/tasks/${taskId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
@@ -47,7 +50,9 @@ export default function TaskManagement() {
 
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId: number) => {
-      return apiRequest('DELETE', `/api/tasks/${taskId}`);
+      return apiRequest(`/api/tasks/${taskId}`, {
+        method: 'DELETE'
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });

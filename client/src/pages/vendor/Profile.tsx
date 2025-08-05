@@ -58,14 +58,14 @@ export default function Profile() {
   const form = useForm<UpdateProfileRequest>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      name: profile?.user.name || '',
-      bio: profile?.user.bio || '',
-      phone: profile?.user.phone || '',
-      bankAccountName: profile?.user.bankAccountName || '',
-      bankAccountNumber: profile?.user.bankAccountNumber || '',
-      bankIfscCode: profile?.user.bankIfscCode || '',
-      bankName: profile?.user.bankName || '',
-      upiId: profile?.user.upiId || '',
+      name: '',
+      bio: '',
+      phone: '',
+      bankAccountName: '',
+      bankAccountNumber: '',
+      bankIfscCode: '',
+      bankName: '',
+      upiId: '',
     },
   });
 
