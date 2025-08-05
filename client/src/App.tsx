@@ -120,6 +120,11 @@ function AppRouter() {
               <VendorTasks />
             </VendorLayout>
           )} />
+          <Route path="/vendor/packages" component={() => (
+            <VendorLayout>
+              <VendorPackage />
+            </VendorLayout>
+          )} />
           <Route path="/vendor/package" component={() => (
             <VendorLayout>
               <VendorPackage />
@@ -137,7 +142,7 @@ function AppRouter() {
           )} />
         </>
       )}
-      <Route component={NotFound} />
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 }

@@ -34,16 +34,16 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       isActive: location === '/vendor' 
     },
     { 
-      label: 'Available Tasks', 
+      label: 'Tasks', 
       href: '/vendor/tasks', 
       icon: CheckSquare,
       isActive: location === '/vendor/tasks' 
     },
     { 
-      label: 'My Tasks', 
-      href: '/vendor/my-tasks', 
-      icon: UserCheck,
-      isActive: location === '/vendor/my-tasks' 
+      label: 'Package', 
+      href: '/vendor/package', 
+      icon: Gift,
+      isActive: location === '/vendor/package' || location === '/vendor/packages'
     },
     { 
       label: 'Profile', 
