@@ -153,9 +153,9 @@ export default function ForgotPassword() {
             <div className="text-center text-sm">
               <span className="text-muted-foreground">Remember your password? </span>
               <Link href="/login">
-                <a className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                <span className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium cursor-pointer">
                   Sign in
-                </a>
+                </span>
               </Link>
             </div>
           )}

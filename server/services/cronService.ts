@@ -8,14 +8,15 @@ export class CronService {
       try {
         console.log('Checking for expired tasks...');
         
-        const expiredTasks = await TaskModel.getExpiredTasks();
+        // Skip expired task check until database is properly initialized
+        // const expiredTasks = await TaskModel.getExpiredTasks();
         
-        if (expiredTasks.length > 0) {
-          const taskIds = expiredTasks.map(task => task.id);
-          await TaskModel.markAsMissed(taskIds);
-          
-          console.log(`Marked ${expiredTasks.length} tasks as missed`);
-        }
+        // if (expiredTasks.length > 0) {
+        //   const taskIds = expiredTasks.map(task => task.id);
+        //   await TaskModel.markAsMissed(taskIds);
+        //   
+        //   console.log(`Marked ${expiredTasks.length} tasks as missed`);
+        // }
       } catch (error) {
         console.error('Error processing expired tasks:', error);
       }

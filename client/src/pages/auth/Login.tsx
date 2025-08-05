@@ -184,9 +184,9 @@ export default function Login({ onSwitchToRegister }: LoginProps) {
 
               <div className="flex items-center justify-between">
                 <Link href="/forgot-password">
-                  <a className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                  <span className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer">
                     Forgot password?
-                  </a>
+                  </span>
                 </Link>
               </div>
 
@@ -213,9 +213,9 @@ export default function Login({ onSwitchToRegister }: LoginProps) {
               </button>
             ) : (
               <Link href="/register">
-                <a className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                <span className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium cursor-pointer">
                   Sign up
-                </a>
+                </span>
               </Link>
             )}
           </div>

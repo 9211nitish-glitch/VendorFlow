@@ -90,18 +90,3 @@ export class GoogleAuthService {
     }
   }
 }
-        name: googleData.name,
-        email: googleData.email,
-        googleId: googleData.googleId,
-        role: UserRole.VENDOR,
-        status: UserStatus.ACTIVE,
-        referralCode
-      });
-
-      return newUser;
-    } catch (error) {
-      console.error('Google auth handler error:', error);
-      throw new Error('Failed to handle Google authentication');
-    }
-  }
-}

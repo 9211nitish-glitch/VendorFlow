@@ -184,8 +184,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 const Icon = item.icon;
                 return (
                   <Link key={item.href} href={item.href}>
-                    <a
-                      className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    <div
+                      className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                         item.isActive
                           ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
@@ -198,7 +198,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                           : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
                       }`} />
                       {item.label}
-                    </a>
+                    </div>
                   </Link>
                 );
               })}
@@ -298,8 +298,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     const Icon = item.icon;
                     return (
                       <Link key={item.href} href={item.href}>
-                        <a
-                          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                        <div
+                          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                             item.isActive
                               ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200'
                               : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
@@ -313,7 +313,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                               : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400'
                           }`} />
                           {item.label}
-                        </a>
+                        </div>
                       </Link>
                     );
                   })}
