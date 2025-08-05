@@ -1,25 +1,11 @@
 {
   "name": "starsflock-backend",
   "version": "1.0.0",
-  "type": "module",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "/usr/bin/node server.js"
+    "start": "node index.js"
   },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "dependencies": {
-    "@tanstack/react-query": "^5.60.5",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "express-validator": "^7.2.0",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.11.4",
-    "nanoid": "^4.0.2",
-    "node-cron": "^3.0.3",
-    "razorpay": "^2.9.4"
   }
 }
