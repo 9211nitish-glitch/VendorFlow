@@ -136,21 +136,11 @@ export default function VendorProfile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
+    // Validate file size (1GB max)
+    if (file.size > 1024 * 1024 * 1024) {
       toast({
         title: "Error",
-        description: "Please select an image file",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "Error",
-        description: "Image size must be less than 5MB",
+        description: "File size must be less than 1GB",
         variant: "destructive",
       });
       return;
@@ -221,7 +211,7 @@ export default function VendorProfile() {
               <div>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="*/*"
                   onChange={handleFileChange}
                   className="hidden"
                   id="profile-photo"
@@ -239,7 +229,7 @@ export default function VendorProfile() {
                     {isUploading ? 'Uploading...' : 'Change Photo'}
                   </Button>
                 </label>
-                <p className="text-sm text-gray-500 mt-2">JPG, PNG up to 5MB</p>
+                <p className="text-sm text-gray-500 mt-2">Any file type up to 1GB</p>
               </div>
             </div>
           </CardContent>
