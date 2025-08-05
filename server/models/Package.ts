@@ -139,23 +139,9 @@ export class PackageModel {
     };
   }
 
-  static async canUserPerformAction(userId: number, action: 'task' | 'skip'): Promise<boolean> {
-    const userPackage = await this.getUserPackage(userId);
-    if (!userPackage) return false;
 
-    const packageInfo = await this.findById(userPackage.packageId);
-    if (!packageInfo) return false;
 
-    if (action === 'task') {
-      return userPackage.tasksUsed < packageInfo.taskLimit;
-    } else if (action === 'skip') {
-      return userPackage.skipsUsed < packageInfo.skipLimit;
-    }
-
-    return false;
-  }
-
-  static async create(packageData: Omit<Package, 'id' | 'createdAt' | 'updatedAt'>): Promise<Package> {
+  static async create(packageData: any): Promise<Package> {
     const [result] = await pool.execute(
       `INSERT INTO packages (
         name, type, taskLimit, skipLimit, validityDays, price, 
@@ -163,12 +149,24 @@ export class PackageModel {
         kitBox, premiumSubscription, onsiteVideoVisit, pentaRefEarning, remoWork, isActive
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        packageData.name, packageData.type, packageData.taskLimit, packageData.skipLimit,
-        packageData.validityDays, packageData.price, packageData.dailyTaskLimit,
-        packageData.soloEarn, packageData.dualEarn, packageData.earnTask,
-        packageData.igLimitMin, packageData.ytLimitMin, packageData.kitBox,
-        packageData.premiumSubscription, packageData.onsiteVideoVisit,
-        packageData.pentaRefEarning, packageData.remoWork, packageData.isActive
+        packageData.name || 'New Package',
+        packageData.type || 'Onsite',
+        packageData.taskLimit || 10,
+        packageData.skipLimit || 5,
+        packageData.validityDays || 30,
+        packageData.price || 1000,
+        packageData.dailyTaskLimit || 3,
+        packageData.soloEarn || 10,
+        packageData.dualEarn || 20,
+        packageData.earnTask || 30,
+        packageData.igLimitMin || 1,
+        packageData.ytLimitMin || 2,
+        packageData.kitBox || 0,
+        packageData.premiumSubscription || 0,
+        packageData.onsiteVideoVisit || 0,
+        packageData.pentaRefEarning || 0,
+        packageData.remoWork || 0,
+        packageData.isActive || 1
       ]
     );
 
@@ -186,8 +184,8 @@ export class PackageModel {
       return null;
     }
 
-    const updateFields = [];
-    const updateValues = [];
+    const updateFields: string[] = [];
+    const updateValues: any[] = [];
 
     Object.entries(packageData).forEach(([key, value]) => {
       if (value !== undefined) {
